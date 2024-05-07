@@ -1,0 +1,11 @@
+name: jrrp
+version: '1.0'
+main: me.lichris93.jrrp.jrrp
+authors: [LiChris93]
+description: A plugin to show how lucky a player is
+website: https://lichris93.top
+softdepend: [PlaceholderAPI]
+commands:
+  jrrp:
+    usage: "/jrrp"
+    description: "jrrp command"

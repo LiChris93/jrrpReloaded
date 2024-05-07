@@ -1,0 +1,8 @@
+# Project exclude paths
+/.idea/
+/target/jrrp-1.0-SNAPSHOT-shaded.jar
+/target/original-jrrp-1.0-SNAPSHOT.jar
+/target/classes/
+/target/generated-sources/
+/target/maven-archiver/
+/target/maven-status/

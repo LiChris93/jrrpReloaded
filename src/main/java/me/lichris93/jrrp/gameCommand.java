@@ -49,7 +49,7 @@ public class gameCommand implements CommandExecutor {
             commandSender.sendMessage("§a/jrrp clear [name]            清空数据");
             commandSender.sendMessage("§a/jrrp get <name>            获取指定人的值");
         }
-        commandSender.sendMessage("§a----------[ By LiChris93 ]-----------");
+        commandSender.sendMessage("§a----------[ By LiChris93 ]------------");
     }
 
     public void valueGenerate(@NotNull CommandSender commandSender) {

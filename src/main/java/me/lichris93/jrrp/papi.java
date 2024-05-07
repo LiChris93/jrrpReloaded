@@ -1,7 +1,7 @@
 package me.lichris93.jrrp;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import static me.lichris93.jrrp.values.*;
@@ -34,7 +34,7 @@ public class papi extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, @NotNull String params) {
+    public String onRequest(OfflinePlayer player, @NotNull String params) {
         try {
             if (params.equalsIgnoreCase("num")) {
                 return DataMap.get(player.getName())[0]; //

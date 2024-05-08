@@ -6,8 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
 
 import static me.lichris93.jrrp.values.*;
 
@@ -34,6 +33,9 @@ public class gameCommand implements CommandExecutor {
             } else {
                 commandSender.sendMessage("§a无法获得" + strings[1] + "的数据!");
             }
+        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("rank") && commandSender.isOp()) {
+            //'/jrrp rank'
+            sendRank(commandSender);
         } else {
             showHelp(commandSender);
         }
@@ -45,6 +47,7 @@ public class gameCommand implements CommandExecutor {
         commandSender.sendMessage("§a[]为可选,<>为必填");
         commandSender.sendMessage("§a/jrrp                生成/查看今日人品值");
         commandSender.sendMessage("§a/jrrp help               显示本帮助信息");
+        commandSender.sendMessage("§a/jrrp rank                   显示排行榜");
         if (commandSender.isOp()) {
             commandSender.sendMessage("§a/jrrp clear [name]            清空数据");
             commandSender.sendMessage("§a/jrrp get <name>            获取指定人的值");
@@ -66,6 +69,17 @@ public class gameCommand implements CommandExecutor {
             commandSender.sendMessage("§a生成成功!生成的值为:" + DataMap.get(name)[0]);
         }
     }
+
+    public void sendRank(@NotNull CommandSender commandSender) {
+        autoRank.updateRank();
+        int rank = 0;
+        commandSender.sendMessage("§a--------------  排行榜  --------------");
+        for (Map.Entry<String, Integer> entry : RankedMap.entrySet()) {
+            rank += 1;
+            commandSender.sendMessage("§a" + rank + "." + entry.getKey() + ":" + entry.getValue());
+        }
+    }
+
 
     public String rand() {
         return Integer.toString(new Random().nextInt(101));

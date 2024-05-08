@@ -31,18 +31,29 @@
 
 - /jrrp - 获取今日人品值
     - help - 获取命令帮助
+    - rank - 排行榜
     - clear [name] - 清空指定玩家数据/所有数据(仅OP可用)
     - get \<name\> - 获取指定玩家的人品值(仅OP可用)
 
-## 变量列表
+## 变量列表(需安装PlaceholderAPI)
 
-- %jrrp_num% - 人品值
-- %jrrp_num_colored% - 带有颜色的人品值
+- %jrrp_num% - 自己的人品值
+- %jrrp_num_colored% - 带有颜色的自己的人品值
+- %jrrp_first_player% - 第一名的名字
+- %jrrp_second_player% - 第二名的名字
+- %jrrp_third_player% - 第三名的名字
+- %jrrp_first_num% - 第一名的人品值
+- %jrrp_second_num% - 第二名的人品值
+- %jrrp_third_num% - 第三名的人品值
+- %jrrp_first_num_colored% - 带有颜色的第一名的人品值
+- %jrrp_second_num_colored% - 带有颜色的第二名的人品值
+- %jrrp_third_num_colored% - 带有颜色的第三名的人品值
+
 
 ## TODO
 
 - [x] 支持PlaceholderAPI
-- [ ] 支持榜单
+- [x] 支持榜单
 
 ## 声明
 

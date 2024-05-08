@@ -13,19 +13,21 @@ public class autoGC extends Thread {
             SimpleDateFormat f = new SimpleDateFormat("MM/dd");//格式化
             String date = f.format(new Date());//日期
             Iterator<Map.Entry<String, String[]>> iterator = DataMap.entrySet().iterator();
-            int times = 0;
+            int dataRemoved = 0;
+            int millis = 300000;
             while (iterator.hasNext()) {
                 Map.Entry<String, String[]> entry = iterator.next();
                 if (!entry.getValue()[1].equals(date)) {//删除过期数据
-                    DataMap.remove(entry.getKey());
-                    times += 1;
+                    iterator.remove();
+                    dataRemoved += 1;
+                    millis = 86400000;
                 }
             }
-            if (times != 0) {
-                plugin.info("[垃圾回收]已从数组中清除" + times + "条垃圾数据!");
+            if (dataRemoved != 0) {
+                plugin.info("[垃圾回收]已从数组中清除" + dataRemoved + "条垃圾数据!");
             }
             try {
-                Thread.sleep(300000);
+                Thread.sleep(millis);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -4,6 +4,8 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 import static me.lichris93.jrrp.values.*;
 
 public class papi extends PlaceholderExpansion {
@@ -36,24 +38,67 @@ public class papi extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         try {
-            if (params.equalsIgnoreCase("num")) {
-                return DataMap.get(player.getName())[0]; //
-            }
-            if (params.equalsIgnoreCase("num_colored")) {
-                String num = DataMap.get(player.getName())[0];
-                if (Integer.parseInt(num) < 25) {
-                    return "§4" + num;
-                } else if (Integer.parseInt(num) < 50) {
-                    return "§e" + num;
-                } else if (Integer.parseInt(num) < 75) {
-                    return "§b" + num;
-                } else {
-                    return "§a" + num;
-                }
+            switch (params.toLowerCase()) {
+                case "num":
+                    return DataMap.get(player.getName())[0];
+                case "num_colored":
+                    return colorNum(DataMap.get(player.getName())[0]);
+                case "first_player":
+                    return getNameByRank(1);
+                case "second_player":
+                    return getNameByRank(2);
+                case "third_player":
+                    return getNameByRank(3);
+                case "first_num":
+                    return Integer.toString(getValueByRank(1));
+                case "second_num":
+                    return Integer.toString(getValueByRank(2));
+                case "third_num":
+                    return Integer.toString(getValueByRank(3));
+                case "first_num_colored":
+                    return colorNum(Integer.toString(getValueByRank(1)));
+                case "second_num_colored":
+                    return colorNum(Integer.toString(getValueByRank(2)));
+                case "third_num_colored":
+                    return colorNum(Integer.toString(getValueByRank(3)));
             }
         } catch (Exception e) {
             return null;
         }
         return null;
+    }
+
+    public String getNameByRank(int rank) {
+        int position = 0;
+        for (Map.Entry<String, Integer> entry : RankedMap.entrySet()) {
+            position += 1;
+            if (position == rank) {
+                return entry.getKey();
+            }
+        }
+        return "";
+    }
+
+    public Integer getValueByRank(int rank) {
+        int position = 0;
+        for (Map.Entry<String, Integer> entry : RankedMap.entrySet()) {
+            position += 1;
+            if (position == rank) {
+                return entry.getValue();
+            }
+        }
+        return 0;
+    }
+
+    public String colorNum(String num) {
+        if (Integer.parseInt(num) < 25) {
+            return "§4" + num;
+        } else if (Integer.parseInt(num) < 50) {
+            return "§e" + num;
+        } else if (Integer.parseInt(num) < 75) {
+            return "§b" + num;
+        } else {
+            return "§a" + num;
+        }
     }
 }

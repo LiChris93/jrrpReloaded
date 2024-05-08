@@ -26,6 +26,8 @@ public final class jrrp extends JavaPlugin {
         registerPAPI();
         //start GC
         startGC();
+        //start AutoRank
+        startAutoRank();
         //Finish Enabling
         info("jrrp 加载完成!——By LiChris93[" + (System.currentTimeMillis() - startloadtime) + "ms]");
 
@@ -82,6 +84,17 @@ public final class jrrp extends JavaPlugin {
             info("垃圾回收线程启动完成");
         } catch (Exception e) {
             warn("垃圾回收线程启动失败");
+            e.printStackTrace();
+        }
+    }
+
+    public void startAutoRank() {
+        try {
+            new autoRank().start();
+            info("自动排名线程启动完成");
+        } catch (Exception e) {
+            warn("自动排名线程启动失败");
+            e.printStackTrace();
         }
     }
 

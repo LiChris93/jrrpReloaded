@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import static me.lichris93.jrrp.values.*;
+import static me.lichris93.jrrp.langs.*;
 
 public class autoGC extends Thread {
     public void run() {
@@ -24,7 +25,7 @@ public class autoGC extends Thread {
                 }
             }
             if (dataRemoved != 0) {
-                plugin.info("[垃圾回收]已从数组中清除" + dataRemoved + "条垃圾数据!");
+                plugin.info(gc_success.replace("{removed_count}",Integer.toString(dataRemoved)));
             }
             try {
                 Thread.sleep(millis);

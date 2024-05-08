@@ -8,7 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static me.lichris93.jrrp.jrrp.loadConfig;
 import static me.lichris93.jrrp.values.*;
+import static me.lichris93.jrrp.langs.*;
 
 public class gameCommand implements CommandExecutor {
     @Override
@@ -18,21 +20,16 @@ public class gameCommand implements CommandExecutor {
         } else if (strings.length == 1 && strings[0].equalsIgnoreCase("clear") && commandSender.isOp()) {
             //'/jrrp clear'
             DataMap.clear();
-            commandSender.sendMessage("§a成功清除所有数据!");
+            commandSender.sendMessage(clear_all_success);
         } else if (strings.length == 2 && strings[0].equalsIgnoreCase("clear") && commandSender.isOp()) {
             //'/jrrp clear [name]'
-            if (DataMap.remove(strings[1]) != null) {
-                commandSender.sendMessage("§a成功清除" + strings[1] + "的数据!");
-            } else {
-                commandSender.sendMessage("§a无法清除" + strings[1] + "的数据!");
-            }
+            clear_specific(commandSender, strings);
         } else if (strings.length == 2 && strings[0].equalsIgnoreCase("get") && commandSender.isOp()) {
             //'/jrrp get <name>'
-            if (DataMap.get(strings[1]) != null) {
-                commandSender.sendMessage("§a" + strings[1] + "的人品值为:" + DataMap.get(strings[1])[0] + ",于" + DataMap.get(strings[1])[1] + "取得");
-            } else {
-                commandSender.sendMessage("§a无法获得" + strings[1] + "的数据!");
-            }
+            get(commandSender, strings);
+        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("reload") && commandSender.isOp()) {
+            //'/jrrp reload
+            reload(commandSender);
         } else if (strings.length == 1 && strings[0].equalsIgnoreCase("rank")) {
             //'/jrrp rank'
             sendRank(commandSender);
@@ -44,13 +41,14 @@ public class gameCommand implements CommandExecutor {
 
     public void showHelp(@NotNull CommandSender commandSender) {
         commandSender.sendMessage("§a--------------[ jrrp ]--------------");
-        commandSender.sendMessage("§a[]为可选,<>为必填");
-        commandSender.sendMessage("§a/jrrp                生成/查看今日人品值");
-        commandSender.sendMessage("§a/jrrp help               显示本帮助信息");
-        commandSender.sendMessage("§a/jrrp rank                   显示排行榜");
+        commandSender.sendMessage(help_option);
+        commandSender.sendMessage(help_jrrp);
+        commandSender.sendMessage(help_jrrp_help);
+        commandSender.sendMessage(help_jrrp_rank);
         if (commandSender.isOp()) {
-            commandSender.sendMessage("§a/jrrp clear [name]            清空数据");
-            commandSender.sendMessage("§a/jrrp get <name>            获取指定人的值");
+            commandSender.sendMessage(help_jrrp_clear);
+            commandSender.sendMessage(help_jrrp_get);
+            commandSender.sendMessage(help_jrrp_reload);
         }
         commandSender.sendMessage("§a----------[ By LiChris93 ]------------");
     }
@@ -61,22 +59,53 @@ public class gameCommand implements CommandExecutor {
         String name = commandSender.getName();//使用者名字
         if (!DataMap.containsKey(name)) {//如果无记录,则生成
             DataMap.put(name, new String[]{rand(), date});
-            commandSender.sendMessage("§a生成成功!生成的值为:" + DataMap.get(name)[0]);
+            commandSender.sendMessage(generate_success.replace("{num}", DataMap.get(name)[0]));
         } else if (DataMap.get(name)[1].equals(date)) {//有记录且时间为当天，不生成
-            commandSender.sendMessage("§a您今天已经生成过了!上次生成的值为:" + DataMap.get(name)[0]);
+            commandSender.sendMessage(generate_duplicate.replace("{num}", DataMap.get(name)[0]));
         } else {//有记录但不是当天，生成
             DataMap.replace(name, new String[]{rand(), date});
-            commandSender.sendMessage("§a生成成功!生成的值为:" + DataMap.get(name)[0]);
+            commandSender.sendMessage(generate_success.replace("{num}", DataMap.get(name)[0]));
         }
+    }
+
+    public void get(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        if (DataMap.get(strings[1]) != null) {//成功获取
+            commandSender.sendMessage(
+                    get_num_success.replace("{player_name}", strings[1])
+                            .replace("{num}", DataMap.get(strings[1])[0])
+                            .replace("{date}", DataMap.get(strings[1])[1])
+            );
+        } else {//未能获取
+            commandSender.sendMessage(get_num_fail.replace("{player_name}", strings[1]));
+        }
+    }
+
+    public void clear_specific(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        if (DataMap.remove(strings[1]) != null) {//成功清空
+            commandSender.sendMessage(clear_specific_player_success.replace("{player_name}", strings[1]));
+        } else {//未能清空
+            commandSender.sendMessage(clear_specific_player_fail.replace("{player_name}", strings[1]));
+        }
+    }
+
+    public void reload(@NotNull CommandSender commandSender) {
+        plugin.reloadConfig();
+        config = plugin.getConfig();
+        loadConfig();
+        commandSender.sendMessage(reloaded);
     }
 
     public void sendRank(@NotNull CommandSender commandSender) {
         autoRank.updateRank();
         int rank = 0;
-        commandSender.sendMessage("§a--------------  排行榜  --------------");
+        commandSender.sendMessage(rank_title);
         for (Map.Entry<String, Integer> entry : RankedMap.entrySet()) {
             rank += 1;
-            commandSender.sendMessage("§a" + rank + "." + entry.getKey() + ":" + entry.getValue());
+            commandSender.sendMessage(
+                    rank_format.replace("{rank}", Integer.toString(rank))
+                            .replace("{player_name}", entry.getKey())
+                            .replace("{num}", Integer.toString(entry.getValue()))
+            );
         }
     }
 

@@ -33,7 +33,7 @@ public class gameCommand implements CommandExecutor {
             } else {
                 commandSender.sendMessage("§a无法获得" + strings[1] + "的数据!");
             }
-        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("rank") && commandSender.isOp()) {
+        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("rank")) {
             //'/jrrp rank'
             sendRank(commandSender);
         } else {

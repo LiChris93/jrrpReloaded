@@ -1,5 +1,8 @@
 package me.lichris93.jrrp;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -8,7 +11,13 @@ import java.util.Map;
 import static me.lichris93.jrrp.values.*;
 import static me.lichris93.jrrp.langs.*;
 
-public class autoGC extends Thread {
+public class autoGC extends BukkitRunnable {//调用info等方法的话要用BukkitRunnable
+    private final JavaPlugin plugin;
+
+    public autoGC(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
+
     public void run() {
         while (true) {
             SimpleDateFormat f = new SimpleDateFormat("MM/dd");//格式化
@@ -24,8 +33,8 @@ public class autoGC extends Thread {
                     millis = 86400000;
                 }
             }
-            if (dataRemoved != 0) {
-                plugin.info(gc_success.replace("{removed_count}",Integer.toString(dataRemoved)));
+            if (dataRemoved > 0) {
+                plugin.getLogger().info(gc_success.replace("{removed_count}", Integer.toString(dataRemoved)));
             }
             try {
                 Thread.sleep(millis);

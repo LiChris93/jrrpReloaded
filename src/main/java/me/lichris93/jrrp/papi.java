@@ -50,22 +50,22 @@ public class papi extends PlaceholderExpansion {
                 case "third_player":
                     return getNameByRank(3);
                 case "first_num":
-                    return Integer.toString(getValueByRank(1));
+                    return getValueByRank(1);
                 case "second_num":
-                    return Integer.toString(getValueByRank(2));
+                    return getValueByRank(2);
                 case "third_num":
-                    return Integer.toString(getValueByRank(3));
+                    return getValueByRank(3);
                 case "first_num_colored":
-                    return colorNum(Integer.toString(getValueByRank(1)));
+                    return colorNum(getValueByRank(1));
                 case "second_num_colored":
-                    return colorNum(Integer.toString(getValueByRank(2)));
+                    return colorNum(getValueByRank(2));
                 case "third_num_colored":
-                    return colorNum(Integer.toString(getValueByRank(3)));
+                    return colorNum(getValueByRank(3));
             }
         } catch (Exception e) {
-            return null;
+            return "";
         }
-        return null;
+        return "";
     }
 
     public String getNameByRank(int rank) {
@@ -79,15 +79,15 @@ public class papi extends PlaceholderExpansion {
         return "";
     }
 
-    public Integer getValueByRank(int rank) {
+    public String getValueByRank(int rank) {
         int position = 0;
         for (Map.Entry<String, Integer> entry : RankedMap.entrySet()) {
             position += 1;
             if (position == rank) {
-                return entry.getValue();
+                return Integer.toString(entry.getValue());
             }
         }
-        return 0;
+        return "";
     }
 
     public String colorNum(String num) {

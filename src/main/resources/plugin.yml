@@ -1,5 +1,5 @@
 name: jrrp
-version: '1.0'
+version: '1.0.1'
 main: me.lichris93.jrrp.jrrp
 authors: [LiChris93]
 description: A plugin to show how lucky a player is

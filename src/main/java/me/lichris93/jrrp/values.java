@@ -9,5 +9,4 @@ public class values {
     static HashMap<String, Integer> RankedMap = new HashMap<>();//[name,value]
     static jrrp plugin;
     static FileConfiguration config;
-    static String version;
 }

@@ -10,14 +10,13 @@ public final class jrrp extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        //Record how much time does enable this plugin use
+        long startLoadingTime = System.currentTimeMillis();
         //Make the values not null
         plugin = this;
-        config = this.getConfig();
         //Create default yml file when missing
         saveDefaultConfig();
         //Begin Enabling
-        //Record how much time does enable this plugin use
-        long startloadtime = System.currentTimeMillis();
         info("jrrp is now enabling ——By LiChris93");
         //Load config.yml
         loadConfigOnEnable();
@@ -30,7 +29,7 @@ public final class jrrp extends JavaPlugin {
         //start AutoRank
         startAutoRank();
         //Finish Enabling
-        info(finish_enable.replace("{milis}", Long.toString(System.currentTimeMillis() - startloadtime)));
+        info(finish_enable.replace("{millis}", Long.toString(System.currentTimeMillis() - startLoadingTime)));
 
     }
 
@@ -82,7 +81,7 @@ public final class jrrp extends JavaPlugin {
 
     public void startGC() {
         try {
-            new autoGC().start();
+            new autoGC(this).runTaskAsynchronously(this);
             info(gc_start_success);
         } catch (Exception e) {
             warn(gc_start_fail);
@@ -101,7 +100,6 @@ public final class jrrp extends JavaPlugin {
     }
 
     public static void loadConfig() {
-        version = config.getString("version");
         clear_all_success = config.getString("lang.clear_all_success");
         clear_specific_player_success = config.getString("lang.clear_specific_player_success");
         clear_specific_player_fail = config.getString("lang.clear_specific_player_fail");

@@ -51,7 +51,7 @@ lang:
   gc_success: "[GC]Successfully removed {removed_count} expired data!"
   reloaded: "§aSuccessfully reloaded config!"
 
-  finish_enable: "jrrp load has finished!——By LiChris93[{milis}ms]"
+  finish_enable: "jrrp load has finished!——By LiChris93[{millis}ms]"
   on_disable: "jrrp disabled successfully!——By LiChris93"
   reg_command_success: "Successfully registered command executor."
   reg_command_fail: "Failed to register command executor."
@@ -72,7 +72,3 @@ lang:
   help_jrrp_clear: "§a/jrrp clear [name]                 clear data"
   help_jrrp_get: "§a/jrrp get <name>     get somebody's luck rate"
   help_jrrp_reload: "§a/jrrp reload                reload the config"
-
-
-#不要修改此项
-version: 1.0

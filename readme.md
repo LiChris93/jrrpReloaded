@@ -24,6 +24,10 @@
 
 <div align="left">
 
+## 最新版本
+
+- [x] 1.0.2-pre2(目前仍为预发布版本,待完成所有todo后,发布正式版)
+
 ## 服务端支持
 
 - [x] Spigot 1.12+
@@ -36,6 +40,8 @@
     - clear [name] - 清空指定玩家数据/所有数据(仅OP可用)
     - get \<name\> - 获取指定玩家的人品值(仅OP可用)
     - reload - 重载config(仅OP可用)
+    - save - 保存数据(仅OP可用)
+    - monitor - 监测各线程运行状态(仅OP可用)
 
 ## 变量列表(需安装PlaceholderAPI)
 

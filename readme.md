@@ -1,6 +1,7 @@
 <div align="center">
 
 # `jrrpReloaded`
+
 <h1>原先的两个项目已经弃坑!!本项目不会再支持QQ机器人!</h1>
 <p>一个基于随机数的衡量玩家幸运程度的插件</p>
 <p>
@@ -34,11 +35,13 @@
     - rank - 排行榜
     - clear [name] - 清空指定玩家数据/所有数据(仅OP可用)
     - get \<name\> - 获取指定玩家的人品值(仅OP可用)
+    - reload - 重载config(仅OP可用)
 
 ## 变量列表(需安装PlaceholderAPI)
 
 - %jrrp_num% - 自己的人品值
 - %jrrp_num_colored% - 带有颜色的自己的人品值
+-
 - %jrrp_first_player% - 第一名的名字
 - %jrrp_second_player% - 第二名的名字
 - %jrrp_third_player% - 第三名的名字
@@ -48,12 +51,26 @@
 - %jrrp_first_num_colored% - 带有颜色的第一名的人品值
 - %jrrp_second_num_colored% - 带有颜色的第二名的人品值
 - %jrrp_third_num_colored% - 带有颜色的第三名的人品值
-
+-
+- %jrrp_yesterday_first_player% - 昨天的第一名的名字
+- %jrrp_yesterday_second_player% - 昨天的第二名的名字
+- %jrrp_yesterday_third_player% - 昨天的第三名的名字
+- %jrrp_yesterday_first_num% - 昨天的第一名的人品值
+- %jrrp_yesterday_second_num% - 昨天的第二名的人品值
+- %jrrp_yesterday_third_num% - 昨天的第三名的人品值
+- %jrrp_yesterday_first_num_colored% - 带有颜色的昨天的第一名的人品值
+- %jrrp_yesterday_second_num_colored% - 带有颜色的昨天的第二名的人品值
+- %jrrp_yesterday_third_num_colored% - 带有颜色的昨天的第三名的人品值
 
 ## TODO
 
 - [x] 支持PlaceholderAPI
 - [x] 支持榜单
+- [ ] 按照名次给玩家发放物品奖励
+-  - [x] 前置要求:记录昨天的数据
+- [ ] 关闭插件时把数据保存到yml,加载插件时再次读取(有点难)
+- [ ] 把目前OP可用的指令的权限拆分为权限组
+- [x] 把langs和config拆开
 
 ## 声明
 

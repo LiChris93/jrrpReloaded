@@ -1,8 +1,8 @@
 package me.lichris93.jrrp;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
@@ -12,22 +12,23 @@ import static me.lichris93.jrrp.jrrp.loadConfig;
 import static me.lichris93.jrrp.values.*;
 import static me.lichris93.jrrp.langs.*;
 
-public class gameCommand implements CommandExecutor {
+public class gameCommand implements TabExecutor {
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String @NotNull [] strings) {
+    public boolean onCommand(@NotNull CommandSender commandSender, Command command, String s, String @NotNull [] strings) {
+        boolean isOP = commandSender.isOp();
         if (strings.length == 0) {//'/jrrp'
             valueGenerate(commandSender);
-        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("clear") && commandSender.isOp()) {
+        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("clear") && isOP) {
             //'/jrrp clear'
             DataMap.clear();
             commandSender.sendMessage(clear_all_success);
-        } else if (strings.length == 2 && strings[0].equalsIgnoreCase("clear") && commandSender.isOp()) {
+        } else if (strings.length == 2 && strings[0].equalsIgnoreCase("clear") && isOP) {
             //'/jrrp clear [name]'
             clear_specific(commandSender, strings);
-        } else if (strings.length == 2 && strings[0].equalsIgnoreCase("get") && commandSender.isOp()) {
+        } else if (strings.length == 2 && strings[0].equalsIgnoreCase("get") && isOP) {
             //'/jrrp get <name>'
             get(commandSender, strings);
-        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("reload") && commandSender.isOp()) {
+        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("reload") && isOP) {
             //'/jrrp reload
             reload(commandSender);
         } else if (strings.length == 1 && strings[0].equalsIgnoreCase("rank")) {
@@ -37,6 +38,33 @@ public class gameCommand implements CommandExecutor {
             showHelp(commandSender);
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender commandSender, Command command, String s, String @NotNull [] strings) {
+        List<String> tabList = new ArrayList<>();
+        boolean isOP = commandSender.isOp();
+        if (strings.length == 1) {// /jrrp 这里必须比onCommand多1,我不知道为什么
+            tabList.add("help");
+            tabList.add("rank");
+            if (isOP) {
+                tabList.add("clear");
+                tabList.add("get");
+                tabList.add("reload");
+            }
+            return tabList;
+        } else if (strings.length == 2 && strings[0].equalsIgnoreCase("clear") && isOP) {// /jrrp clear [name]
+            for (Map.Entry<String, String[]> entry : DataMap.entrySet()) {
+                tabList.add(entry.getKey());
+            }
+            return tabList;
+        } else if (strings.length == 2 && strings[0].equalsIgnoreCase("get") && isOP) {// /jrrp get <name>
+            for (Map.Entry<String, String[]> entry : DataMap.entrySet()) {
+                tabList.add(entry.getKey());
+            }
+            return tabList;
+        }
+        return Collections.emptyList();
     }
 
     public void showHelp(@NotNull CommandSender commandSender) {
@@ -91,6 +119,7 @@ public class gameCommand implements CommandExecutor {
     public void reload(@NotNull CommandSender commandSender) {
         plugin.reloadConfig();
         config = plugin.getConfig();
+        plugin.reloadAndGetLang();
         loadConfig();
         commandSender.sendMessage(reloaded);
     }
@@ -108,7 +137,6 @@ public class gameCommand implements CommandExecutor {
             );
         }
     }
-
 
     public String rand() {
         return Integer.toString(new Random().nextInt(101));

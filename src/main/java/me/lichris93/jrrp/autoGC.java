@@ -19,22 +19,26 @@ public class autoGC extends BukkitRunnable {//调用info等方法的话要用Buk
     }
 
     public void run() {
+        int millis = 300000;
+        String oldDate = "NULL";//默认值,不会用到,但是必须要初始化变量
         while (true) {
             SimpleDateFormat f = new SimpleDateFormat("MM/dd");//格式化
             String date = f.format(new Date());//日期
             Iterator<Map.Entry<String, String[]>> iterator = DataMap.entrySet().iterator();
             int dataRemoved = 0;
-            int millis = 300000;
             while (iterator.hasNext()) {
                 Map.Entry<String, String[]> entry = iterator.next();
                 if (!entry.getValue()[1].equals(date)) {//删除过期数据
+                    oldDate = entry.getValue()[1];
                     iterator.remove();
                     dataRemoved += 1;
                     millis = 86400000;
                 }
             }
             if (dataRemoved > 0) {
-                plugin.getLogger().info(gc_success.replace("{removed_count}", Integer.toString(dataRemoved)));
+                plugin.getServer().broadcastMessage(
+                        gc_success.replace("{removed_count}", Integer.toString(dataRemoved)).
+                                replace("{date}", oldDate));
             }
             try {
                 Thread.sleep(millis);

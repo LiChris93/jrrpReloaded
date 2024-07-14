@@ -1,5 +1,6 @@
 package me.lichris93.jrrp;
 
+import me.lichris93.jrrp.thread.autoRank;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -9,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static me.lichris93.jrrp.jrrp.loadConfig;
+import static me.lichris93.jrrp.jrrp.loadData;
 import static me.lichris93.jrrp.values.*;
 import static me.lichris93.jrrp.langs.*;
 
@@ -31,6 +33,12 @@ public class gameCommand implements TabExecutor {
         } else if (strings.length == 1 && strings[0].equalsIgnoreCase("reload") && isOP) {
             //'/jrrp reload
             reload(commandSender);
+        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("save") && isOP) {
+            //'/jrrp save
+            save(commandSender);
+        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("monitor") && isOP) {
+            //'/jrrp monitor
+            monitor(commandSender);
         } else if (strings.length == 1 && strings[0].equalsIgnoreCase("rank")) {
             //'/jrrp rank'
             sendRank(commandSender);
@@ -51,6 +59,8 @@ public class gameCommand implements TabExecutor {
                 tabList.add("clear");
                 tabList.add("get");
                 tabList.add("reload");
+                tabList.add("save");
+                tabList.add("monitor");
             }
             return tabList;
         } else if (strings.length == 2 && strings[0].equalsIgnoreCase("clear") && isOP) {// /jrrp clear [name]
@@ -77,6 +87,8 @@ public class gameCommand implements TabExecutor {
             commandSender.sendMessage(help_jrrp_clear);
             commandSender.sendMessage(help_jrrp_get);
             commandSender.sendMessage(help_jrrp_reload);
+            commandSender.sendMessage(help_jrrp_save);
+            commandSender.sendMessage(help_jrrp_monitor);
         }
         commandSender.sendMessage("§a----------[ By LiChris93 ]------------");
     }
@@ -120,6 +132,8 @@ public class gameCommand implements TabExecutor {
         plugin.reloadConfig();
         config = plugin.getConfig();
         plugin.reloadAndGetLang();
+        plugin.reloadAndGetData();
+        loadData();
         loadConfig();
         commandSender.sendMessage(reloaded);
     }
@@ -136,6 +150,24 @@ public class gameCommand implements TabExecutor {
                             .replace("{num}", Integer.toString(entry.getValue()))
             );
         }
+    }
+
+    public void save(CommandSender commandSender) {
+        try {
+            plugin.saveData();
+            commandSender.sendMessage("§aSuccessfully saved!");
+        } catch (Exception e) {
+            commandSender.sendMessage("§cFailed to Save!");
+        }
+
+    }
+
+    public void monitor(@NotNull CommandSender commandSender) {
+        commandSender.sendMessage(monitor_title);
+        commandSender.sendMessage("§aautoRank:" + autoRank_running);
+        commandSender.sendMessage("§aautoSum:" + autoSum_running);
+        commandSender.sendMessage("§aautoSave:" + autoSave_running);
+        commandSender.sendMessage("§aautoGC:" + autoGC_running);
     }
 
     public String rand() {

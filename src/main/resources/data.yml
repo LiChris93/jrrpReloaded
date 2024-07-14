@@ -1,0 +1,5 @@
+#Don't change the data naughtily!!!
+data:
+  date: ""
+  today: '{"player":[],"rate":[]}'
+  yesterday: '{"player":["","",""],"rate":["","",""]}'

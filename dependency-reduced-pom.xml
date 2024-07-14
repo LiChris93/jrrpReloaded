@@ -4,7 +4,7 @@
   <groupId>me.lichris93</groupId>
   <artifactId>jrrp</artifactId>
   <name>jrrp</name>
-  <version>1.0.2-pre1</version>
+  <version>1.0.2-pre2</version>
   <description>A plugin to show how lucky a player is</description>
   <url>https://lichris93.top</url>
   <build>
@@ -49,6 +49,10 @@
     <repository>
       <id>sonatype</id>
       <url>https://oss.sonatype.org/content/groups/public/</url>
+    </repository>
+    <repository>
+      <id>maven2</id>
+      <url>https://repo1.maven.org/maven2/</url>
     </repository>
   </repositories>
   <dependencies>

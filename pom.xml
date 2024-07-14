@@ -6,7 +6,7 @@
 
   <groupId>me.lichris93</groupId>
   <artifactId>jrrp</artifactId>
-          <version>1.0.2-pre1</version>
+          <version>1.0.2-pre2</version>
   <packaging>jar</packaging>
 
   <name>jrrp</name>
@@ -64,6 +64,10 @@
           <id>sonatype</id>
           <url>https://oss.sonatype.org/content/groups/public/</url>
       </repository>
+      <repository>
+          <id>maven2</id>
+          <url>https://repo1.maven.org/maven2/</url>
+      </repository>
   </repositories>
 
   <dependencies>
@@ -78,6 +82,11 @@
           <artifactId>annotations</artifactId>
           <version>RELEASE</version>
           <scope>compile</scope>
+      </dependency>
+      <dependency>
+          <groupId>com.alibaba</groupId>
+          <artifactId>fastjson</artifactId>
+          <version>2.0.9</version>
       </dependency>
       <dependency>
           <groupId>me.clip</groupId>

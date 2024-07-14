@@ -1,4 +1,4 @@
-package me.lichris93.jrrp;
+package me.lichris93.jrrp.thread;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,13 +30,15 @@ public class autoRank extends Thread { //不调用info等方法的话直接用Th
     }
 
     public void run() {
-        while (true) {
-            updateRank();
-            try {
+        autoRank_running = true;
+        try {
+            while (true) {
+                updateRank();
                 sleep(60000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            autoRank_running = false;
         }
     }
 }

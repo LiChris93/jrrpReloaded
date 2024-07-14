@@ -1,4 +1,8 @@
 #jrrp 配置文件
 #Made by LiChris93
 
-#目前这里什么都没有 :)
+autosave:
+  #是否开启自动保存数据(若更改,需使用PlugMan等插件重载本插件,或重启才能生效,而不是/jrrp reload!!!)
+  enabled: true
+  #每次保存间隔(单位为毫秒)
+  interval: 60000

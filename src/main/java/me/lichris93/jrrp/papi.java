@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 import static me.lichris93.jrrp.values.*;
-import static me.lichris93.jrrp.autoSummarizeYesterdayRank.*;
+import static me.lichris93.jrrp.thread.autoSummarizeYesterdayRank.*;
 
 public class papi extends PlaceholderExpansion {
     public final jrrp plugin;

@@ -12,6 +12,7 @@
 #  reloaded: "§a重载配置成功!"
 #  gc_success: "§a[jrrp-垃圾回收]已从数组中清除{date}的{removed_count}条垃圾数据!"
 #  yesterday_summarized: "§a§l{date}的排行已经确定!"
+#  monitor_title: "§a各线程的运行状态:"
 #
 #  finish_enable: "jrrp 加载完成!——By LiChris93[{millis}ms]"
 #  on_disable: "jrrp 关闭完成!——By LiChris93"
@@ -26,6 +27,13 @@
 #  gc_start_fail: "垃圾回收线程启动失败"
 #  rank_start_success: "自动排名线程启动完成"
 #  rank_start_fail: "自动排名线程启动失败"
+#  save_start_success: "自动保存线程启动完成"
+#  save_start_fail: "自动保存线程启动失败"
+#  save_disabled: "自动保存线程已被禁用"
+
+#  data_read_success: "从文件读取数据成功"
+#  data_read_fail: "从文件读取数据失败"
+#  data_expired: "文件中的数据过期,忽略并删除"
 
 #  help_option: "§a[]为可选,<>为必填"
 #  help_jrrp: "§a/jrrp                生成/查看今日人品值"
@@ -34,6 +42,8 @@
 #  help_jrrp_clear: "§a/jrrp clear [name]            清空数据"
 #  help_jrrp_get: "§a/jrrp get <name>            获取指定人的值"
 #  help_jrrp_reload: "§a/jrrp reload                     重载配置"
+#  help_jrrp_save: "§a/jrrp save                     保存数据"
+#  help_jrrp_monitor: "§a/jrrp monitor      监控各线程的运行状态"
 
 #English
 lang:
@@ -49,6 +59,7 @@ lang:
   gc_success: "§a[jrrp-GC]Successfully removed {removed_count} expired data on {date}!"
   reloaded: "§aSuccessfully reloaded config!"
   yesterday_summarized: "§a§l{date}'s rank has been summarized!"
+  monitor_title: "§aRunning status of each thread:"
 
   finish_enable: "jrrp load has finished!——By LiChris93[{millis}ms]"
   on_disable: "jrrp disabled successfully!——By LiChris93"
@@ -63,6 +74,13 @@ lang:
   gc_start_fail: "Failed to start GC Thread."
   rank_start_success: "Auto ranking Thread has started successfully."
   rank_start_fail: "Failed to start Auto ranking Thread."
+  save_start_success: "Auto saving Thread has started successfully."
+  save_start_fail: "Failed to start Auto saving Thread."
+  save_disabled: "Auto saving Thread is disabled."
+
+  data_read_success: "Successfully read data from file."
+  data_read_fail: "Failed to read data from file."
+  data_expired: "The data in the file has expired.Ignore and delete."
 
   help_option: "§a[] is optional,<> is necessary."
   help_jrrp: "§a/jrrp            generate/see your luck rate"
@@ -71,3 +89,5 @@ lang:
   help_jrrp_clear: "§a/jrrp clear [name]                 clear data"
   help_jrrp_get: "§a/jrrp get <name>     get somebody's luck rate"
   help_jrrp_reload: "§a/jrrp reload                reload the config"
+  help_jrrp_save: "§a/jrrp save                Save the data"
+  help_jrrp_monitor: "§a/jrrp monitor      Monitor the status of each thread"

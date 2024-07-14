@@ -1,19 +1,31 @@
 package me.lichris93.jrrp;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.base.Charsets;
+import me.lichris93.jrrp.thread.autoGC;
+import me.lichris93.jrrp.thread.autoRank;
+import me.lichris93.jrrp.thread.autoSave;
+import me.lichris93.jrrp.thread.autoSummarizeYesterdayRank;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+import static me.lichris93.jrrp.thread.autoSummarizeYesterdayRank.*;
 import static me.lichris93.jrrp.values.*;
 import static me.lichris93.jrrp.langs.*;
 
 public final class jrrp extends JavaPlugin {
-
     @Override
     public void onEnable() {
         //Record how much time does enable this plugin use
@@ -21,12 +33,15 @@ public final class jrrp extends JavaPlugin {
         //Make the values not null
         plugin = this;
         langsFile = new File(getDataFolder(), "langs.yml");//读取langs.yml
+        dataFile = new File(getDataFolder(), "data.yml");//读取langs.yml
         //Create default yml file when missing
         saveWhenNotExist();
         //Begin Enabling
         info("jrrp is now enabling ——By LiChris93");
         //Load config.yml
         loadConfigOnEnable();
+        //Load data.yml
+        loadData();
         //Register game command
         regCommand();
         //register PAPI
@@ -35,12 +50,19 @@ public final class jrrp extends JavaPlugin {
         startGC();
         //start AutoRank
         startAutoRank();
+        //start AutoSave
+        startAutoSave();
         //Finish Enabling
         info(finish_enable.replace("{millis}", Long.toString(System.currentTimeMillis() - startLoadingTime)));
     }
 
     @Override
     public void onDisable() {
+        try {
+            saveData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         info(on_disable);
     }
 
@@ -48,6 +70,9 @@ public final class jrrp extends JavaPlugin {
         saveDefaultConfig();
         if (!langsFile.exists()) {//若不存在则创建langs.yml(相当于SaveDefaultConfig)
             saveResource("langs.yml", false);
+        }
+        if (!dataFile.exists()) {//若不存在则创建data.yml(相当于SaveDefaultConfig)
+            saveResource("data.yml", false);
         }
     }
 
@@ -68,6 +93,7 @@ public final class jrrp extends JavaPlugin {
         try {
             config = plugin.getConfig();//读取config.yml
             langsYML = YamlConfiguration.loadConfiguration(langsFile);
+            dataYML = YamlConfiguration.loadConfiguration(dataFile);
             loadConfig();
             info(read_config_success);
         } catch (Exception e) {
@@ -80,7 +106,7 @@ public final class jrrp extends JavaPlugin {
 
     public void registerPAPI() {
         try {
-            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { // 
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
                 new papi(this).register();
                 info(papi_success);
             } else {
@@ -89,8 +115,6 @@ public final class jrrp extends JavaPlugin {
         } catch (Exception e) {
             warn(papi_fail);
             e.printStackTrace();
-            //Disable plugin
-            this.getPluginLoader().disablePlugin(this);
         }
     }
 
@@ -115,7 +139,24 @@ public final class jrrp extends JavaPlugin {
         }
     }
 
+    public void startAutoSave() {
+        try {
+            if (autosave_enabled) {
+                new autoSave().start();
+                info(save_start_success);
+            } else {
+                warn(save_disabled);
+            }
+        } catch (Exception e) {
+            warn(save_start_fail);
+            e.printStackTrace();
+        }
+    }
+
     public static void loadConfig() {
+        autosave_enabled = config.getBoolean("autosave.enabled");
+        autosave_interval = config.getInt("autosave.interval");
+
         clear_all_success = langsYML.getString("lang.clear_all_success");
         clear_specific_player_success = langsYML.getString("lang.clear_specific_player_success");
         clear_specific_player_fail = langsYML.getString("lang.clear_specific_player_fail");
@@ -128,6 +169,7 @@ public final class jrrp extends JavaPlugin {
         gc_success = langsYML.getString("lang.gc_success");
         reloaded = langsYML.getString("lang.reloaded");
         yesterday_summarized = langsYML.getString("lang.yesterday_summarized");
+        monitor_title = langsYML.getString("lang.monitor_title");
 
         finish_enable = langsYML.getString("lang.finish_enable");
         on_disable = langsYML.getString("lang.on_disable");
@@ -142,6 +184,13 @@ public final class jrrp extends JavaPlugin {
         gc_start_fail = langsYML.getString("lang.gc_start_fail");
         rank_start_success = langsYML.getString("lang.rank_start_success");
         rank_start_fail = langsYML.getString("lang.rank_start_fail");
+        save_start_success = langsYML.getString("lang.save_start_success");
+        save_start_fail = langsYML.getString("lang.save_start_fail");
+        save_disabled = langsYML.getString("lang.save_disabled");
+
+        data_read_success = langsYML.getString("lang.data_read_success");
+        data_read_fail = langsYML.getString("lang.data_read_fail");
+        data_expired = langsYML.getString("lang.data_expired");
 
         help_option = langsYML.getString("lang.help_option");
         help_jrrp = langsYML.getString("lang.help_jrrp");
@@ -150,6 +199,52 @@ public final class jrrp extends JavaPlugin {
         help_jrrp_clear = langsYML.getString("lang.help_jrrp_clear");
         help_jrrp_get = langsYML.getString("lang.help_jrrp_get");
         help_jrrp_reload = langsYML.getString("lang.help_jrrp_reload");
+        help_jrrp_save = langsYML.getString("lang.help_jrrp_save");
+        help_jrrp_monitor = langsYML.getString("lang.help_jrrp_monitor");
+    }
+
+    public static void loadData() {
+        try {
+            //从yml读取生json字符串
+            String data_today = dataYML.getString("data.today");
+            String data_yesterday = dataYML.getString("data.yesterday");
+            //解码为json对象
+            JSONObject json_today = JSONObject.parseObject(data_today);
+            JSONObject json_yesterday = JSONObject.parseObject(data_yesterday);
+            //读取json中的信息
+            //首先读取日期
+            String date_today = dataYML.getString("data.date");
+            //获取今天日期
+            SimpleDateFormat f = new SimpleDateFormat("MM/dd");
+            String real_date = f.format(new Date());
+            //实际日期数据中的日期不符,终止读取,并删除数据
+            if (!real_date.equals(date_today)) {
+                plugin.warn(data_expired);
+                dataYML.set("data.date", real_date);
+                dataYML.set("data.today", "{\"date\":\"\",\"player\":[],\"rate\":[]}");
+                dataYML.set("data.yesterday", "{\"player\":[\"\",\"\",\"\"],\"rate\":[\"\",\"\",\"\"]}");
+                dataYML.save(dataFile);
+                return;
+            }
+            //读取今日玩家名和人品值信息
+            List<String> player_today = JSON.parseArray(json_today.getJSONArray("player").toJSONString(), String.class);
+            List<String> rate_today = JSON.parseArray(json_today.getJSONArray("rate").toJSONString(), String.class);
+            //写入变量
+            for (int i = 0; i < player_today.size(); i++) {
+                DataMap.put(player_today.get(i), new String[]{rate_today.get(i), real_date});
+            }
+            //读取昨日玩家名和人品值信息
+            List<String> player_yesterday = JSON.parseArray(json_yesterday.getJSONArray("player").toJSONString(), String.class);
+            List<String> rate_yesterday = JSON.parseArray(json_yesterday.getJSONArray("rate").toJSONString(), String.class);
+            //写入变量
+            yesterday_first = new String[]{player_yesterday.get(0), rate_yesterday.get(0)};
+            yesterday_second = new String[]{player_yesterday.get(1), rate_yesterday.get(1)};
+            yesterday_third = new String[]{player_yesterday.get(2), rate_yesterday.get(2)};
+            plugin.info(data_read_success);
+        } catch (Exception e) {
+            plugin.warn(data_read_fail);
+            e.printStackTrace();
+        }
     }
 
     public void info(String text) {
@@ -170,5 +265,55 @@ public final class jrrp extends JavaPlugin {
 
         newLang.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
         langsYML = newLang;
+    }
+
+    public void reloadAndGetData() {//仿照reloadConfig()
+        YamlConfiguration newData = YamlConfiguration.loadConfiguration(dataFile);
+
+        final InputStream defConfigStream = getResource("data.yml");
+        if (defConfigStream == null) {
+            return;
+        }
+
+        newData.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
+        dataYML = newData;
+    }
+
+    public void saveData() throws IOException {
+        //获取今天日期
+        SimpleDateFormat f = new SimpleDateFormat("MM/dd");
+        String real_date = f.format(new Date());
+        //保存日期
+        dataYML.set("data.date", real_date);
+        //读取今天数据
+        List<String> player_today = new ArrayList<>();
+        List<String> rate_today = new ArrayList<>();
+        for (Map.Entry<String, String[]> entry : DataMap.entrySet()) {
+            player_today.add(entry.getKey());
+            rate_today.add(entry.getValue()[0]);
+        }
+        //保存今天数据
+        JSONObject today_json = new JSONObject();//空json
+        today_json.put("player", player_today);
+        today_json.put("rate", rate_today);
+        dataYML.set("data.today", today_json.toString());
+        //保存昨天数据
+        JSONObject yesterday_json = new JSONObject();//空json
+        List<String> player_yesterday = new ArrayList<>();
+        List<String> rate_yesterday = new ArrayList<>();
+
+        player_yesterday.add(yesterday_first[0]);
+        player_yesterday.add(yesterday_second[0]);
+        player_yesterday.add(yesterday_third[0]);
+
+        rate_yesterday.add(yesterday_first[1]);
+        rate_yesterday.add(yesterday_second[1]);
+        rate_yesterday.add(yesterday_third[1]);
+
+        yesterday_json.put("player", player_yesterday);
+        yesterday_json.put("rate", rate_yesterday);
+        dataYML.set("data.yesterday", yesterday_json.toString());
+        //写入文件
+        dataYML.save(dataFile);
     }
 }

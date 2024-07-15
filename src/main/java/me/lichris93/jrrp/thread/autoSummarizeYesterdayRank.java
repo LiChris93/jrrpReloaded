@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static me.lichris93.jrrp.thread.autoRank.updateRank;
-import static me.lichris93.jrrp.langs.yesterday_summarized;
+import static me.lichris93.jrrp.langs.*;
 import static me.lichris93.jrrp.papi.getNameByRank;
 import static me.lichris93.jrrp.papi.getValueByRank;
 import static me.lichris93.jrrp.values.*;
@@ -51,6 +51,7 @@ public class autoSummarizeYesterdayRank extends BukkitRunnable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            plugin.getLogger().warning(autoSum_stopped);
             autoSum_running = false;
         }
     }

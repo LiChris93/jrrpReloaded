@@ -4,7 +4,7 @@
   <groupId>me.lichris93</groupId>
   <artifactId>jrrp</artifactId>
   <name>jrrp</name>
-  <version>1.0.2-pre2</version>
+  <version>1.0.2-pre3</version>
   <description>A plugin to show how lucky a player is</description>
   <url>https://lichris93.top</url>
   <build>

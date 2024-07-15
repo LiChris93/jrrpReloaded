@@ -3,17 +3,20 @@ package me.lichris93.jrrp;
 public class langs {
     public static String clear_all_success = "§aSuccessfully cleared all data!";
     public static String clear_specific_player_success = "§aSuccessfully cleared data of {player_name}!";
-    public static String clear_specific_player_fail = "§aFailed to clear data of {player_name}!";
+    public static String clear_specific_player_fail = "§cFailed to clear data of {player_name}!";
     public static String get_num_success = "§a{player_name}'s luck rate is {num},got on {date}.";
-    public static String get_num_fail = "§aUnable to get data of {player_name}.";
+    public static String get_num_fail = "§cUnable to get data of {player_name}.";
     public static String generate_success = "§aSuccessfully generated!Your luck rate is {num}.";
-    public static String generate_duplicate = "§aYou have already generated your luck rate today!The luck rate you generated was {num}.";
+    public static String generate_duplicate = "§cYou have already generated your luck rate today!The luck rate you generated was {num}.";
     public static String rank_title = "§a--------------  Rank List  --------------";
     public static String rank_format = "§a{rank}.{player_name}:{num}";
     public static String gc_success = "§a[jrrp-GC]Successfully removed {removed_count} expired data on {date}!";
-    public static String reloaded = "§aSuccessfully reloaded config!";
+    public static String reloaded_success = "§aSuccessfully reloaded config!";
+    public static String reloaded_fail = "§cFailed to reload config! You can know the detail in the console.";
     public static String yesterday_summarized = "§a§l{date}'s rank has been summarized!";
     public static String monitor_title = "§aRunning status of each thread:";
+    public static String save_success = "§aSuccessfully saved!";
+    public static String save_fail = "§cFailed to Save! You can know the detail in the console!";
 
     public static String finish_enable = "jrrp load has finished!——By LiChris93[{millis}ms]";
     public static String on_disable = "jrrp disabled successfully!——By LiChris93";
@@ -35,6 +38,11 @@ public class langs {
     public static String data_read_success = "Successfully read data from file.";
     public static String data_read_fail = "Failed to read data from file.";
     public static String data_expired = "The data in the file has expired.Ignore and delete.";
+
+    public static String autoGC_stopped = "The autoGC thread has stopped.";
+    public static String autoRank_stopped = "The autoRank thread has stopped.";
+    public static String autoSave_stopped = "The autoSave thread has stopped.";
+    public static String autoSum_stopped = "The autoSum thread has stopped.";
 
     public static String help_option = "§a[] is optional,<> is necessary.";
     public static String help_jrrp = "§a/jrrp            generate/see your luck rate";

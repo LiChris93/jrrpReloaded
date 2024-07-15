@@ -17,33 +17,33 @@ import static me.lichris93.jrrp.langs.*;
 public class gameCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, Command command, String s, String @NotNull [] strings) {
-        boolean isOP = commandSender.isOp();
         if (strings.length == 0) {//'/jrrp'
             valueGenerate(commandSender);
-        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("clear") && isOP) {
-            //'/jrrp clear'
-            DataMap.clear();
-            commandSender.sendMessage(clear_all_success);
-        } else if (strings.length == 2 && strings[0].equalsIgnoreCase("clear") && isOP) {
-            //'/jrrp clear [name]'
-            clear_specific(commandSender, strings);
-        } else if (strings.length == 2 && strings[0].equalsIgnoreCase("get") && isOP) {
-            //'/jrrp get <name>'
-            get(commandSender, strings);
-        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("reload") && isOP) {
-            //'/jrrp reload
-            reload(commandSender);
-        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("save") && isOP) {
-            //'/jrrp save
-            save(commandSender);
-        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("monitor") && isOP) {
-            //'/jrrp monitor
-            monitor(commandSender);
-        } else if (strings.length == 1 && strings[0].equalsIgnoreCase("rank")) {
-            //'/jrrp rank'
-            sendRank(commandSender);
-        } else {
-            showHelp(commandSender);
+            return true;
+        }
+
+        switch (strings[0].toLowerCase()) {
+            case "get":
+                get(commandSender, strings);
+                break;
+            case "clear":
+                clear(commandSender, strings);
+                break;
+            case "reload":
+                reload(commandSender, strings);
+                break;
+            case "rank":
+                sendRank(commandSender, strings);
+                break;
+            case "save":
+                save(commandSender, strings);
+                break;
+            case "monitor":
+                monitor(commandSender, strings);
+                break;
+            default:
+                showHelp(commandSender);
+                break;
         }
         return true;
     }
@@ -63,12 +63,14 @@ public class gameCommand implements TabExecutor {
                 tabList.add("monitor");
             }
             return tabList;
-        } else if (strings.length == 2 && strings[0].equalsIgnoreCase("clear") && isOP) {// /jrrp clear [name]
+        }
+        if (strings.length == 2 && strings[0].equalsIgnoreCase("clear") && isOP) {// /jrrp clear [name]
             for (Map.Entry<String, String[]> entry : DataMap.entrySet()) {
                 tabList.add(entry.getKey());
             }
             return tabList;
-        } else if (strings.length == 2 && strings[0].equalsIgnoreCase("get") && isOP) {// /jrrp get <name>
+        }
+        if (strings.length == 2 && strings[0].equalsIgnoreCase("get") && isOP) {// /jrrp get <name>
             for (Map.Entry<String, String[]> entry : DataMap.entrySet()) {
                 tabList.add(entry.getKey());
             }
@@ -109,6 +111,8 @@ public class gameCommand implements TabExecutor {
     }
 
     public void get(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        if (unPass(2, true, commandSender, strings)) return;
+
         if (DataMap.get(strings[1]) != null) {//成功获取
             commandSender.sendMessage(
                     get_num_success.replace("{player_name}", strings[1])
@@ -120,7 +124,17 @@ public class gameCommand implements TabExecutor {
         }
     }
 
-    public void clear_specific(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+    public void clear(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        if (unPass_clear(commandSender, strings)) return;
+
+        // /jrrp clear (全部清除)
+        if (strings.length == 1) {
+            DataMap.clear();
+            commandSender.sendMessage(clear_all_success);
+            return;
+        }
+        //具体清除
+        // /jrrp clear [name]
         if (DataMap.remove(strings[1]) != null) {//成功清空
             commandSender.sendMessage(clear_specific_player_success.replace("{player_name}", strings[1]));
         } else {//未能清空
@@ -128,17 +142,26 @@ public class gameCommand implements TabExecutor {
         }
     }
 
-    public void reload(@NotNull CommandSender commandSender) {
-        plugin.reloadConfig();
-        config = plugin.getConfig();
-        plugin.reloadAndGetLang();
-        plugin.reloadAndGetData();
-        loadData();
-        loadConfig();
-        commandSender.sendMessage(reloaded);
+    public void reload(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        if (unPass(1, true, commandSender, strings)) return;
+
+        try {
+            plugin.reloadConfig();
+            config = plugin.getConfig();
+            plugin.reloadAndGetLang();
+            plugin.reloadAndGetData();
+            loadData();
+            loadConfig();
+            commandSender.sendMessage(reloaded_success);
+        } catch (Exception e) {
+            commandSender.sendMessage(reloaded_fail);
+            e.printStackTrace();
+        }
     }
 
-    public void sendRank(@NotNull CommandSender commandSender) {
+    public void sendRank(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        if (unPass(1, false, commandSender, strings)) return;
+
         autoRank.updateRank();
         int rank = 0;
         commandSender.sendMessage(rank_title);
@@ -152,17 +175,22 @@ public class gameCommand implements TabExecutor {
         }
     }
 
-    public void save(CommandSender commandSender) {
+    public void save(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        if (unPass(1, true, commandSender, strings)) return;
+
         try {
             plugin.saveData();
-            commandSender.sendMessage("§aSuccessfully saved!");
+            commandSender.sendMessage(save_success);
         } catch (Exception e) {
-            commandSender.sendMessage("§cFailed to Save!");
+            commandSender.sendMessage(save_fail);
+            e.printStackTrace();
         }
 
     }
 
-    public void monitor(@NotNull CommandSender commandSender) {
+    public void monitor(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        if (unPass(1, true, commandSender, strings)) return;
+
         commandSender.sendMessage(monitor_title);
         commandSender.sendMessage("§aautoRank:" + autoRank_running);
         commandSender.sendMessage("§aautoSum:" + autoSum_running);
@@ -172,5 +200,35 @@ public class gameCommand implements TabExecutor {
 
     public String rand() {
         return Integer.toString(new Random().nextInt(101));
+    }
+
+    public boolean unPass(int argNum, boolean needOP, @NotNull CommandSender commandSender, String @NotNull [] strings) {
+        //仅适用于参数个数只有一种情况的时候 不止一种情况的话要单独写方法
+
+        //没权限 显示帮助 不予通过
+        if (needOP && !commandSender.isOp()) {
+            showHelp(commandSender);
+            return true;
+        }
+        //格式不对 显示帮助 不予通过
+        if (strings.length != argNum) {
+            showHelp(commandSender);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean unPass_clear(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        //没权限 显示帮助 不予通过
+        if (!commandSender.isOp()) {
+            showHelp(commandSender);
+            return true;
+        }
+        //格式不对 显示帮助 不予通过
+        if (strings.length < 1 || strings.length > 2) {
+            showHelp(commandSender);
+            return true;
+        }
+        return false;
     }
 }

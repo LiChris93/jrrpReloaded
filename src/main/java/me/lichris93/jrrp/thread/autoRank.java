@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+import static me.lichris93.jrrp.langs.*;
 import static me.lichris93.jrrp.values.*;
 
 public class autoRank extends Thread { //不调用info等方法的话直接用Thread
@@ -38,6 +39,7 @@ public class autoRank extends Thread { //不调用info等方法的话直接用Th
             }
         } catch (Exception e) {
             e.printStackTrace();
+            plugin.warn(autoRank_stopped);
             autoRank_running = false;
         }
     }

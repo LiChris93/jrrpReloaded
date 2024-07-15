@@ -46,6 +46,7 @@ public class autoGC extends BukkitRunnable {//调用info等方法的话要用Buk
             }
         } catch (Exception e) {
             e.printStackTrace();
+            plugin.getLogger().warning(autoGC_stopped);
             autoGC_running = false;
         }
     }

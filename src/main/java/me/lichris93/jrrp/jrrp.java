@@ -41,7 +41,12 @@ public final class jrrp extends JavaPlugin {
         //Load config.yml
         loadConfigOnEnable();
         //Load data.yml
-        loadData();
+        try {
+            loadData();
+        } catch (Exception e) {
+            plugin.warn(data_read_fail);
+            e.printStackTrace();
+        }
         //Register game command
         regCommand();
         //register PAPI
@@ -142,7 +147,7 @@ public final class jrrp extends JavaPlugin {
     public void startAutoSave() {
         try {
             if (autosave_enabled) {
-                new autoSave().start();
+                new autoSave(this).runTaskAsynchronously(this);
                 info(save_start_success);
             } else {
                 warn(save_disabled);
@@ -167,9 +172,12 @@ public final class jrrp extends JavaPlugin {
         rank_title = langsYML.getString("lang.rank_title");
         rank_format = langsYML.getString("lang.rank_format");
         gc_success = langsYML.getString("lang.gc_success");
-        reloaded = langsYML.getString("lang.reloaded");
+        reloaded_success = langsYML.getString("lang.reloaded_success");
+        reloaded_fail = langsYML.getString("lang.reloaded_fail");
         yesterday_summarized = langsYML.getString("lang.yesterday_summarized");
         monitor_title = langsYML.getString("lang.monitor_title");
+        save_success = langsYML.getString("lang.save_success");
+        save_fail = langsYML.getString("lang.save_fail");
 
         finish_enable = langsYML.getString("lang.finish_enable");
         on_disable = langsYML.getString("lang.on_disable");
@@ -203,48 +211,43 @@ public final class jrrp extends JavaPlugin {
         help_jrrp_monitor = langsYML.getString("lang.help_jrrp_monitor");
     }
 
-    public static void loadData() {
-        try {
-            //从yml读取生json字符串
-            String data_today = dataYML.getString("data.today");
-            String data_yesterday = dataYML.getString("data.yesterday");
-            //解码为json对象
-            JSONObject json_today = JSONObject.parseObject(data_today);
-            JSONObject json_yesterday = JSONObject.parseObject(data_yesterday);
-            //读取json中的信息
-            //首先读取日期
-            String date_today = dataYML.getString("data.date");
-            //获取今天日期
-            SimpleDateFormat f = new SimpleDateFormat("MM/dd");
-            String real_date = f.format(new Date());
-            //实际日期数据中的日期不符,终止读取,并删除数据
-            if (!real_date.equals(date_today)) {
-                plugin.warn(data_expired);
-                dataYML.set("data.date", real_date);
-                dataYML.set("data.today", "{\"date\":\"\",\"player\":[],\"rate\":[]}");
-                dataYML.set("data.yesterday", "{\"player\":[\"\",\"\",\"\"],\"rate\":[\"\",\"\",\"\"]}");
-                dataYML.save(dataFile);
-                return;
-            }
-            //读取今日玩家名和人品值信息
-            List<String> player_today = JSON.parseArray(json_today.getJSONArray("player").toJSONString(), String.class);
-            List<String> rate_today = JSON.parseArray(json_today.getJSONArray("rate").toJSONString(), String.class);
-            //写入变量
-            for (int i = 0; i < player_today.size(); i++) {
-                DataMap.put(player_today.get(i), new String[]{rate_today.get(i), real_date});
-            }
-            //读取昨日玩家名和人品值信息
-            List<String> player_yesterday = JSON.parseArray(json_yesterday.getJSONArray("player").toJSONString(), String.class);
-            List<String> rate_yesterday = JSON.parseArray(json_yesterday.getJSONArray("rate").toJSONString(), String.class);
-            //写入变量
-            yesterday_first = new String[]{player_yesterday.get(0), rate_yesterday.get(0)};
-            yesterday_second = new String[]{player_yesterday.get(1), rate_yesterday.get(1)};
-            yesterday_third = new String[]{player_yesterday.get(2), rate_yesterday.get(2)};
-            plugin.info(data_read_success);
-        } catch (Exception e) {
-            plugin.warn(data_read_fail);
-            e.printStackTrace();
+    public static void loadData() throws IOException {
+        //从yml读取生json字符串
+        String data_today = dataYML.getString("data.today");
+        String data_yesterday = dataYML.getString("data.yesterday");
+        //解码为json对象
+        JSONObject json_today = JSONObject.parseObject(data_today);
+        JSONObject json_yesterday = JSONObject.parseObject(data_yesterday);
+        //读取json中的信息
+        //首先读取日期
+        String date_today = dataYML.getString("data.date");
+        //获取今天日期
+        SimpleDateFormat f = new SimpleDateFormat("MM/dd");
+        String real_date = f.format(new Date());
+        //实际日期数据中的日期不符,终止读取,并删除数据
+        if (!real_date.equals(date_today)) {
+            plugin.warn(data_expired);
+            dataYML.set("data.date", real_date);
+            dataYML.set("data.today", "{\"date\":\"\",\"player\":[],\"rate\":[]}");
+            dataYML.set("data.yesterday", "{\"player\":[\"\",\"\",\"\"],\"rate\":[\"\",\"\",\"\"]}");
+            dataYML.save(dataFile);
+            return;
         }
+        //读取今日玩家名和人品值信息
+        List<String> player_today = JSON.parseArray(json_today.getJSONArray("player").toJSONString(), String.class);
+        List<String> rate_today = JSON.parseArray(json_today.getJSONArray("rate").toJSONString(), String.class);
+        //写入变量
+        for (int i = 0; i < player_today.size(); i++) {
+            DataMap.put(player_today.get(i), new String[]{rate_today.get(i), real_date});
+        }
+        //读取昨日玩家名和人品值信息
+        List<String> player_yesterday = JSON.parseArray(json_yesterday.getJSONArray("player").toJSONString(), String.class);
+        List<String> rate_yesterday = JSON.parseArray(json_yesterday.getJSONArray("rate").toJSONString(), String.class);
+        //写入变量
+        yesterday_first = new String[]{player_yesterday.get(0), rate_yesterday.get(0)};
+        yesterday_second = new String[]{player_yesterday.get(1), rate_yesterday.get(1)};
+        yesterday_third = new String[]{player_yesterday.get(2), rate_yesterday.get(2)};
+        plugin.info(data_read_success);
     }
 
     public void info(String text) {

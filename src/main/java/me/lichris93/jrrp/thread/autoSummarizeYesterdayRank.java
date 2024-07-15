@@ -1,7 +1,5 @@
 package me.lichris93.jrrp.thread;
 
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,18 +10,14 @@ import static me.lichris93.jrrp.papi.getNameByRank;
 import static me.lichris93.jrrp.papi.getValueByRank;
 import static me.lichris93.jrrp.values.*;
 
-public class autoSummarizeYesterdayRank extends BukkitRunnable {
+public class autoSummarizeYesterdayRank extends Thread {
     public static String[] yesterday_first = {"", ""};
     public static String[] yesterday_second = {"", ""};
     public static String[] yesterday_third = {"", ""};
 
-    private final JavaPlugin plugin;
-
-    public autoSummarizeYesterdayRank(JavaPlugin plugin) {
-        this.plugin = plugin;
-    }
 
     public void run() {
+        plugin.getLogger().info(sum_start_success);
         int millis = 10000;
         autoSum_running = true;
         try {
@@ -47,7 +41,10 @@ public class autoSummarizeYesterdayRank extends BukkitRunnable {
                     plugin.getServer().broadcastMessage("§a3:" + yesterday_third[0] + "-" + yesterday_third[1]);
                     millis = 86400000;
                 }
-                Thread.sleep(millis);
+                if (interrupted()) {
+                    throw new InterruptedException();
+                }
+                sleep(millis);
             }
         } catch (Exception e) {
             e.printStackTrace();

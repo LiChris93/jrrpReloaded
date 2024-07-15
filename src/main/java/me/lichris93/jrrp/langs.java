@@ -31,6 +31,8 @@ public class langs {
     public static String gc_start_fail = "Failed to start GC Thread.";
     public static String rank_start_success = "Auto ranking Thread has started successfully.";
     public static String rank_start_fail = "Failed to start Auto ranking Thread.";
+    public static String sum_start_success = "Auto summarizing Thread has started successfully.";
+    public static String sum_start_fail = "Failed to start Auto summarizing Thread.";
     public static String save_start_success = "Auto saving Thread has started successfully.";
     public static String save_start_fail = "Failed to start Auto saving Thread.";
     public static String save_disabled = "Auto saving Thread is disabled.";
@@ -43,6 +45,14 @@ public class langs {
     public static String autoRank_stopped = "The autoRank thread has stopped.";
     public static String autoSave_stopped = "The autoSave thread has stopped.";
     public static String autoSum_stopped = "The autoSum thread has stopped.";
+
+    public static String thread_already_running = "The thread {name} is already running!";
+    public static String thread_already_stopped = "The thread {name} is already stopped!";
+    public static String thread_start_success = "Thread {name} has started successfully!";
+    public static String thread_start_fail = "Failed to start thread {name}!";
+    public static String thread_stop_success = "Thread {name} has stopped successfully!";
+    public static String thread_stop_fail = "Failed to stop thread {name}!";
+    public static String thread_not_exist = "The thread doesn't exist!";
 
     public static String help_option = "§a[] is optional,<> is necessary.";
     public static String help_jrrp = "§a/jrrp            generate/see your luck rate";

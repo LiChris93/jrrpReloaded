@@ -34,6 +34,10 @@ public final class jrrp extends JavaPlugin {
         plugin = this;
         langsFile = new File(getDataFolder(), "langs.yml");//读取langs.yml
         dataFile = new File(getDataFolder(), "data.yml");//读取langs.yml
+        autoRank_thread = new autoRank();
+        autoGC_thread = new autoGC();
+        autoSave_thread = new autoSave();
+        autoSum_thread = new autoSummarizeYesterdayRank();
         //Create default yml file when missing
         saveWhenNotExist();
         //Begin Enabling
@@ -55,6 +59,8 @@ public final class jrrp extends JavaPlugin {
         startGC();
         //start AutoRank
         startAutoRank();
+        //start AutoSum
+        startAutoSum();
         //start AutoSave
         startAutoSave();
         //Finish Enabling
@@ -125,8 +131,7 @@ public final class jrrp extends JavaPlugin {
 
     public void startGC() {
         try {
-            new autoGC(this).runTaskAsynchronously(this);
-            info(gc_start_success);
+            autoGC_thread.start();
         } catch (Exception e) {
             warn(gc_start_fail);
             e.printStackTrace();
@@ -135,11 +140,18 @@ public final class jrrp extends JavaPlugin {
 
     public void startAutoRank() {
         try {
-            new autoRank().start();
-            new autoSummarizeYesterdayRank(this).runTaskAsynchronously(this);
-            info(rank_start_success);
+            autoRank_thread.start();
         } catch (Exception e) {
             warn(rank_start_fail);
+            e.printStackTrace();
+        }
+    }
+
+    public void startAutoSum() {
+        try {
+            autoSum_thread.start();
+        } catch (Exception e) {
+            warn(sum_start_fail);
             e.printStackTrace();
         }
     }
@@ -147,8 +159,7 @@ public final class jrrp extends JavaPlugin {
     public void startAutoSave() {
         try {
             if (autosave_enabled) {
-                new autoSave(this).runTaskAsynchronously(this);
-                info(save_start_success);
+                autoSave_thread.start();
             } else {
                 warn(save_disabled);
             }
@@ -192,6 +203,8 @@ public final class jrrp extends JavaPlugin {
         gc_start_fail = langsYML.getString("lang.gc_start_fail");
         rank_start_success = langsYML.getString("lang.rank_start_success");
         rank_start_fail = langsYML.getString("lang.rank_start_fail");
+        sum_start_success = langsYML.getString("lang.sum_start_success");
+        sum_start_fail = langsYML.getString("lang.sum_start_fail");
         save_start_success = langsYML.getString("lang.save_start_success");
         save_start_fail = langsYML.getString("lang.save_start_fail");
         save_disabled = langsYML.getString("lang.save_disabled");
@@ -199,6 +212,19 @@ public final class jrrp extends JavaPlugin {
         data_read_success = langsYML.getString("lang.data_read_success");
         data_read_fail = langsYML.getString("lang.data_read_fail");
         data_expired = langsYML.getString("lang.data_expired");
+
+        autoGC_stopped = langsYML.getString("lang.autoGC_stopped");
+        autoRank_stopped = langsYML.getString("lang.autoRank_stopped");
+        autoSave_stopped = langsYML.getString("lang.autoSave_stopped");
+        autoSum_stopped = langsYML.getString("lang.autoSum_stopped");
+
+        thread_already_running = langsYML.getString("lang.thread_already_running");
+        thread_already_stopped = langsYML.getString("lang.thread_already_stopped");
+        thread_start_success = langsYML.getString("lang.thread_start_success");
+        thread_start_fail = langsYML.getString("lang.thread_start_fail");
+        thread_stop_success = langsYML.getString("lang.thread_stop_success");
+        thread_stop_fail = langsYML.getString("lang.thread_stop_fail");
+        thread_not_exist = langsYML.getString("lang.thread_not_exist");
 
         help_option = langsYML.getString("lang.help_option");
         help_jrrp = langsYML.getString("lang.help_jrrp");

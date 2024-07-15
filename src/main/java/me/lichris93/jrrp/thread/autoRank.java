@@ -7,7 +7,7 @@ import java.util.*;
 import static me.lichris93.jrrp.langs.*;
 import static me.lichris93.jrrp.values.*;
 
-public class autoRank extends Thread { //不调用info等方法的话直接用Thread
+public class autoRank extends Thread {
     public static <K, V extends Comparable<? super V>> @NotNull Map<K, V> sortDescend(@NotNull Map<K, V> map) {
         //根据Value降序排列HashMap(来源https://blog.csdn.net/weixin_33446857/article/details/85123772)
         List<Map.Entry<K, V>> list = new ArrayList<>(map.entrySet());
@@ -31,15 +31,19 @@ public class autoRank extends Thread { //不调用info等方法的话直接用Th
     }
 
     public void run() {
+        plugin.getLogger().info(rank_start_success);
         autoRank_running = true;
         try {
             while (true) {
                 updateRank();
+                if (interrupted()) {
+                    throw new InterruptedException();
+                }
                 sleep(60000);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            plugin.warn(autoRank_stopped);
+            plugin.getLogger().warning(autoRank_stopped);
             autoRank_running = false;
         }
     }

@@ -1,6 +1,9 @@
 package me.lichris93.jrrp;
 
+import me.lichris93.jrrp.thread.autoGC;
 import me.lichris93.jrrp.thread.autoRank;
+import me.lichris93.jrrp.thread.autoSave;
+import me.lichris93.jrrp.thread.autoSummarizeYesterdayRank;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -41,6 +44,12 @@ public class gameCommand implements TabExecutor {
             case "monitor":
                 monitor(commandSender, strings);
                 break;
+            case "start":
+                threadStart(commandSender, strings);
+                break;
+            case "stop":
+                threadStop(commandSender, strings);
+                break;
             default:
                 showHelp(commandSender);
                 break;
@@ -61,20 +70,32 @@ public class gameCommand implements TabExecutor {
                 tabList.add("reload");
                 tabList.add("save");
                 tabList.add("monitor");
+                tabList.add("start");
+                tabList.add("stop");
             }
             return tabList;
         }
-        if (strings.length == 2 && strings[0].equalsIgnoreCase("clear") && isOP) {// /jrrp clear [name]
-            for (Map.Entry<String, String[]> entry : DataMap.entrySet()) {
-                tabList.add(entry.getKey());
-            }
-            return tabList;
-        }
-        if (strings.length == 2 && strings[0].equalsIgnoreCase("get") && isOP) {// /jrrp get <name>
-            for (Map.Entry<String, String[]> entry : DataMap.entrySet()) {
-                tabList.add(entry.getKey());
-            }
-            return tabList;
+
+        if (!isOP || strings.length != 2) return Collections.emptyList();
+        switch (strings[0].toLowerCase()) {
+            case "clear":// /jrrp clear [name]
+            case "get":// /jrrp get <name>
+                for (Map.Entry<String, String[]> entry : DataMap.entrySet()) {
+                    tabList.add(entry.getKey());
+                }
+                return tabList;
+            case "stop":// /jrrp stop <Thread>
+                if (autoSave_running) tabList.add("autoSave");
+                if (autoSum_running) tabList.add("autoSum");
+                if (autoGC_running) tabList.add("autoGC");
+                if (autoRank_running) tabList.add("autoRank");
+                return tabList;
+            case "start":// /jrrp start <thread>
+                if (!autoSave_running) tabList.add("autoSave");
+                if (!autoSum_running) tabList.add("autoSum");
+                if (!autoGC_running) tabList.add("autoGC");
+                if (!autoRank_running) tabList.add("autoRank");
+                return tabList;
         }
         return Collections.emptyList();
     }
@@ -196,6 +217,148 @@ public class gameCommand implements TabExecutor {
         commandSender.sendMessage("§aautoSum:" + autoSum_running);
         commandSender.sendMessage("§aautoSave:" + autoSave_running);
         commandSender.sendMessage("§aautoGC:" + autoGC_running);
+    }
+
+    public void threadStart(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        if (unPass(2, true, commandSender, strings)) return;
+        switch (strings[1]) {
+            case "autoGC":
+                if (autoGC_running) {//线程已在运行
+                    commandSender.sendMessage(thread_already_running.replace("{name}", strings[1]));
+                    return;
+                }
+                autoGC_thread = new autoGC();//重新创建对象
+                try {//异常处理
+                    autoGC_thread.start();
+                } catch (Exception e) {
+                    commandSender.sendMessage(thread_start_fail.replace("{name}", strings[1]));
+                    e.printStackTrace();
+                    return;
+                }
+                autoGC_running = true;
+                commandSender.sendMessage(thread_start_success.replace("{name}", strings[1]));
+                break;
+            case "autoRank":
+                if (autoRank_running) {//线程已在运行
+                    commandSender.sendMessage(thread_already_running.replace("{name}", strings[1]));
+                    return;
+                }
+                autoRank_thread = new autoRank();//重新创建对象
+                try {//异常处理
+                    autoRank_thread.start();
+                } catch (Exception e) {
+                    commandSender.sendMessage(thread_start_fail.replace("{name}", strings[1]));
+                    e.printStackTrace();
+                    return;
+                }
+                autoRank_running = true;
+                commandSender.sendMessage(thread_start_success.replace("{name}", strings[1]));
+                break;
+            case "autoSave":
+                if (autoSave_running) {//线程已在运行
+                    commandSender.sendMessage(thread_already_running.replace("{name}", strings[1]));
+                    return;
+                }
+                autoSave_thread = new autoSave();//重新创建对象
+                try {//异常处理
+                    autoSave_thread.start();
+                } catch (Exception e) {
+                    commandSender.sendMessage(thread_start_fail.replace("{name}", strings[1]));
+                    e.printStackTrace();
+                    return;
+                }
+                autoSave_running = true;
+                commandSender.sendMessage(thread_start_success.replace("{name}", strings[1]));
+                break;
+            case "autoSum":
+                if (autoSum_running) {//线程已在运行
+                    commandSender.sendMessage(thread_already_running.replace("{name}", strings[1]));
+                    return;
+                }
+                autoSum_thread = new autoSummarizeYesterdayRank();//重新创建对象
+                try {//异常处理
+                    autoSum_thread.start();
+                } catch (Exception e) {
+                    commandSender.sendMessage(thread_start_fail.replace("{name}", strings[1]));
+                    e.printStackTrace();
+                    return;
+                }
+                autoSum_running = true;
+                commandSender.sendMessage(thread_start_success.replace("{name}", strings[1]));
+                break;
+            default:
+                commandSender.sendMessage(thread_not_exist);
+                break;
+        }
+    }
+
+    public void threadStop(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        if (unPass(2, true, commandSender, strings)) return;
+        switch (strings[1]) {
+            case "autoGC":
+                if (!autoGC_running) {//线程已被停止
+                    commandSender.sendMessage(thread_already_stopped.replace("{name}", strings[1]));
+                    return;
+                }
+                try {//异常处理
+                    autoGC_thread.interrupt();
+                } catch (Exception e) {
+                    commandSender.sendMessage(thread_stop_fail.replace("{name}", strings[1]));
+                    e.printStackTrace();
+                    return;
+                }
+                autoGC_running = false;
+                commandSender.sendMessage(thread_stop_success.replace("{name}", strings[1]));
+                break;
+            case "autoRank":
+                if (!autoRank_running) {//线程已被停止
+                    commandSender.sendMessage(thread_already_stopped.replace("{name}", strings[1]));
+                    return;
+                }
+                try {//异常处理
+                    autoRank_thread.interrupt();
+                } catch (Exception e) {
+                    commandSender.sendMessage(thread_stop_fail.replace("{name}", strings[1]));
+                    e.printStackTrace();
+                    return;
+                }
+                autoRank_running = false;
+                commandSender.sendMessage(thread_stop_success.replace("{name}", strings[1]));
+                break;
+            case "autoSave":
+                if (!autoSave_running) {//线程已被停止
+                    commandSender.sendMessage(thread_already_stopped.replace("{name}", strings[1]));
+                    return;
+                }
+                try {//异常处理
+                    autoSave_thread.interrupt();
+                } catch (Exception e) {
+                    commandSender.sendMessage(thread_stop_fail.replace("{name}", strings[1]));
+                    e.printStackTrace();
+                    return;
+                }
+                autoSave_running = false;
+                commandSender.sendMessage(thread_stop_success.replace("{name}", strings[1]));
+                break;
+            case "autoSum":
+                if (!autoSum_running) {//线程已被停止
+                    commandSender.sendMessage(thread_already_stopped.replace("{name}", strings[1]));
+                    return;
+                }
+                try {//异常处理
+                    autoSum_thread.interrupt();
+                } catch (Exception e) {
+                    commandSender.sendMessage(thread_stop_fail.replace("{name}", strings[1]));
+                    e.printStackTrace();
+                    return;
+                }
+                autoSum_running = false;
+                commandSender.sendMessage(thread_stop_success.replace("{name}", strings[1]));
+                break;
+            default:
+                commandSender.sendMessage(thread_not_exist);
+                break;
+        }
     }
 
     public String rand() {

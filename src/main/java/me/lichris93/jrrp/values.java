@@ -1,5 +1,6 @@
 package me.lichris93.jrrp;
 
+import me.lichris93.jrrp.thread.*;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -22,4 +23,9 @@ public class values {
     public static boolean autoRank_running = false;
     public static boolean autoSum_running = false;
     public static boolean autoGC_running = false;
+
+    public static autoRank autoRank_thread;
+    public static autoGC autoGC_thread;
+    public static autoSave autoSave_thread;
+    public static autoSummarizeYesterdayRank autoSum_thread;
 }

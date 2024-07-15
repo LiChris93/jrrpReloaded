@@ -63,4 +63,7 @@ public class langs {
     public static String help_jrrp_reload = "§a/jrrp reload                reload the config";
     public static String help_jrrp_save = "§a/jrrp save                Save the data";
     public static String help_jrrp_monitor = "§a/jrrp monitor      Monitor the status of each thread";
+    public static String help_jrrp_start = "§a/jrrp start <thread>      Start a thread";
+    public static String help_jrrp_stop = "§a/jrrp stop <thread>      Stop a thread";
+
 }

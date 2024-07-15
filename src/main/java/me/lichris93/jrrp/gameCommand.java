@@ -112,6 +112,8 @@ public class gameCommand implements TabExecutor {
             commandSender.sendMessage(help_jrrp_reload);
             commandSender.sendMessage(help_jrrp_save);
             commandSender.sendMessage(help_jrrp_monitor);
+            commandSender.sendMessage(help_jrrp_start);
+            commandSender.sendMessage(help_jrrp_stop);
         }
         commandSender.sendMessage("§a----------[ By LiChris93 ]------------");
     }

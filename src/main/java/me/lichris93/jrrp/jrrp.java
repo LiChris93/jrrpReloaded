@@ -235,6 +235,8 @@ public final class jrrp extends JavaPlugin {
         help_jrrp_reload = langsYML.getString("lang.help_jrrp_reload");
         help_jrrp_save = langsYML.getString("lang.help_jrrp_save");
         help_jrrp_monitor = langsYML.getString("lang.help_jrrp_monitor");
+        help_jrrp_start = langsYML.getString("lang.help_jrrp_start");
+        help_jrrp_stop = langsYML.getString("lang.help_jrrp_stop");
     }
 
     public static void loadData() throws IOException {

@@ -62,6 +62,8 @@
 #  help_jrrp_reload: "§a/jrrp reload                     重载配置"
 #  help_jrrp_save: "§a/jrrp save                     保存数据"
 #  help_jrrp_monitor: "§a/jrrp monitor      监控各线程的运行状态"
+#  help_jrrp_start: "§a/jrrp start <thread>      启动一个线程"
+#  help_jrrp_stop: "§a/jrrp stop <thread>      停止一个线程"
 
 #English
 lang:
@@ -127,3 +129,5 @@ lang:
   help_jrrp_reload: "§a/jrrp reload                reload the config"
   help_jrrp_save: "§a/jrrp save                Save the data"
   help_jrrp_monitor: "§a/jrrp monitor      Monitor the status of each thread"
+  help_jrrp_start: "§a/jrrp start <thread>      Start a thread"
+  help_jrrp_stop: "§a/jrrp stop <thread>      Stop a thread"

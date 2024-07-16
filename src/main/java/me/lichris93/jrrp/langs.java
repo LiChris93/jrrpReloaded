@@ -41,10 +41,7 @@ public class langs {
     public static String data_read_fail = "Failed to read data from file.";
     public static String data_expired = "The data in the file has expired.Ignore and delete.";
 
-    public static String autoGC_stopped = "The autoGC thread has stopped.";
-    public static String autoRank_stopped = "The autoRank thread has stopped.";
-    public static String autoSave_stopped = "The autoSave thread has stopped.";
-    public static String autoSum_stopped = "The autoSum thread has stopped.";
+    public static String thread_stopped_by_exception = "The {name} thread has stopped because of an exception.";
 
     public static String thread_already_running = "The thread {name} is already running!";
     public static String thread_already_stopped = "The thread {name} is already stopped!";

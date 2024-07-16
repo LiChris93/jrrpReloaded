@@ -43,7 +43,7 @@ public class autoGC extends Thread {//调用info等方法的话要用BukkitRunna
             }
         } catch (Exception e) {
             e.printStackTrace();
-            plugin.getLogger().warning(autoGC_stopped);
+            plugin.getLogger().warning(thread_stopped_by_exception.replace("{name}","autoGC"));
             autoGC_running = false;
         }
     }

@@ -173,8 +173,8 @@ public class gameCommand implements TabExecutor {
             config = plugin.getConfig();
             plugin.reloadAndGetLang();
             plugin.reloadAndGetData();
-            loadData();
             loadConfig();
+            loadData();
             commandSender.sendMessage(reloaded_success);
         } catch (Exception e) {
             commandSender.sendMessage(reloaded_fail);

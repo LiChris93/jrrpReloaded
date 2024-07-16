@@ -42,6 +42,8 @@
     - reload - 重载config(仅OP可用)
     - save - 保存数据(仅OP可用)
     - monitor - 监测各线程运行状态(仅OP可用)
+    - start \<thread\> 启动线程(仅OP可用)
+    - stop \<thread\> 停止线程(仅OP可用)
 
 ## 变量列表(需安装PlaceholderAPI)
 

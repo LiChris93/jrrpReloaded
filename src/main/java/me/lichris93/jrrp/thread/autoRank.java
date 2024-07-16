@@ -43,7 +43,7 @@ public class autoRank extends Thread {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            plugin.getLogger().warning(autoRank_stopped);
+            plugin.getLogger().warning(thread_stopped_by_exception.replace("{name}","autoRank"));
             autoRank_running = false;
         }
     }

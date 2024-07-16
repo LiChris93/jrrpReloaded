@@ -213,10 +213,7 @@ public final class jrrp extends JavaPlugin {
         data_read_fail = langsYML.getString("lang.data_read_fail");
         data_expired = langsYML.getString("lang.data_expired");
 
-        autoGC_stopped = langsYML.getString("lang.autoGC_stopped");
-        autoRank_stopped = langsYML.getString("lang.autoRank_stopped");
-        autoSave_stopped = langsYML.getString("lang.autoSave_stopped");
-        autoSum_stopped = langsYML.getString("lang.autoSum_stopped");
+        thread_stopped_by_exception = langsYML.getString("lang.thread_stopped_by_exception");
 
         thread_already_running = langsYML.getString("lang.thread_already_running");
         thread_already_stopped = langsYML.getString("lang.thread_already_stopped");

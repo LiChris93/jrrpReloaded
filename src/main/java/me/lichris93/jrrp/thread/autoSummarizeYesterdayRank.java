@@ -48,7 +48,7 @@ public class autoSummarizeYesterdayRank extends Thread {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            plugin.getLogger().warning(autoSum_stopped);
+            plugin.getLogger().warning(thread_stopped_by_exception.replace("{name}","autoSum"));
             autoSum_running = false;
         }
     }

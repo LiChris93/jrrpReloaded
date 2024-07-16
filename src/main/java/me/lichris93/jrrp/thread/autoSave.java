@@ -20,11 +20,11 @@ public class autoSave extends Thread {
         } catch (IOException e) {
             plugin.getLogger().warning(save_fail);
             e.printStackTrace();
-            plugin.getLogger().warning(autoSave_stopped);
+            plugin.getLogger().warning(thread_stopped_by_exception.replace("{name}","autoSave"));
             autoSave_running = false;
         } catch (Exception e) {
             e.printStackTrace();
-            plugin.getLogger().warning(autoSave_stopped);
+            plugin.getLogger().warning(thread_stopped_by_exception.replace("{name}","autoSave"));
             autoSave_running = false;
         }
     }

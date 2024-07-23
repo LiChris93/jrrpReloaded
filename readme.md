@@ -38,6 +38,7 @@
 - /jrrp - 获取今日人品值
     - help - 获取命令帮助
     - rank - 排行榜
+    - getaward - 领取奖励(仅当本功能开启时可用)
     - clear [name] - 清空指定玩家数据/所有数据(仅OP可用)
     - get \<name\> - 获取指定玩家的人品值(仅OP可用)
     - reload - 重载config(仅OP可用)
@@ -60,6 +61,8 @@
 - %jrrp_first_num_colored% - 带有颜色的第一名的人品值
 - %jrrp_second_num_colored% - 带有颜色的第二名的人品值
 - %jrrp_third_num_colored% - 带有颜色的第三名的人品值
+- 
+- %jrrp_award_available_status% - 奖励是否可被领取
 -
 - %jrrp_yesterday_first_player% - 昨天的第一名的名字
 - %jrrp_yesterday_second_player% - 昨天的第二名的名字

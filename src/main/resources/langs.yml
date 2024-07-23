@@ -21,6 +21,8 @@
 #  on_disable: "jrrp 关闭完成!——By LiChris93"
 #  reg_command_success: "命令执行器注册完成"
 #  reg_command_fail: "命令执行器注册失败"
+#  reg_listener_success: "事件监听器注册完成"
+#  reg_listener_fail: "事件监听器注册失败"
 #  read_config_success: "config读取完成"
 #  read_config_fail: "config读取失败"
 #  papi_success: "PAPI注册完成"
@@ -54,6 +56,7 @@
 #  help_jrrp: "§a/jrrp                生成/查看今日人品值"
 #  help_jrrp_help: "§a/jrrp help               显示本帮助信息"
 #  help_jrrp_rank: "§a/jrrp rank                   显示排行榜"
+#  help_jrrp_getaward: "§a/jrrp getaward         领取奖励(如果你是昨天第一名)"
 #  help_jrrp_clear: "§a/jrrp clear [name]            清空数据"
 #  help_jrrp_get: "§a/jrrp get <name>            获取指定人的值"
 #  help_jrrp_reload: "§a/jrrp reload                     重载配置"
@@ -61,6 +64,12 @@
 #  help_jrrp_monitor: "§a/jrrp monitor      监控各线程的运行状态"
 #  help_jrrp_start: "§a/jrrp start <thread>      启动一个线程"
 #  help_jrrp_stop: "§a/jrrp stop <thread>      停止一个线程"
+
+#  award_disabled: "§c奖励功能已被管理员禁用!"
+#  award_successfully: "§a成功领取奖励!"
+#  already_awarded: "§c你已经领取过了今天的奖励!"
+#  not_yesterday_first: "§c你不是昨天的第一名,无法领取奖励!"
+#  award_refreshed: "§a奖励已被刷新!"
 
 #English
 lang:
@@ -85,6 +94,8 @@ lang:
   on_disable: "jrrp disabled successfully!——By LiChris93"
   reg_command_success: "Successfully registered command executor."
   reg_command_fail: "Failed to register command executor."
+  reg_listener_success: "Successfully registered Event Listener."
+  reg_listener_fail: "Failed to register Event Listener."
   read_config_success: "Successfully read config."
   read_config_fail: "Failed to read config."
   papi_success: "Successfully registered PAPI."
@@ -118,6 +129,7 @@ lang:
   help_jrrp: "§a/jrrp            generate/see your luck rate"
   help_jrrp_help: "§a/jrrp help               show this help message"
   help_jrrp_rank: "§a/jrrp rank                 show the rank list"
+  help_jrrp_getaward: "§a/jrrp getaward         get the award (if you're yesterday's first)"
   help_jrrp_clear: "§a/jrrp clear [name]                 clear data"
   help_jrrp_get: "§a/jrrp get <name>     get somebody's luck rate"
   help_jrrp_reload: "§a/jrrp reload                reload the config"
@@ -125,3 +137,9 @@ lang:
   help_jrrp_monitor: "§a/jrrp monitor      Monitor the status of each thread"
   help_jrrp_start: "§a/jrrp start <thread>      Start a thread"
   help_jrrp_stop: "§a/jrrp stop <thread>      Stop a thread"
+  
+  award_disabled: "§cAward has been disabled by operator!"
+  award_successfully: "§aSuccessfully got your award!"
+  already_awarded: "§cYou have already got your award!"
+  not_yesterday_first: "§cYou're not the first of yesterday,you can't get the award."
+  award_refreshed: "§aThe award has been refreshed!"

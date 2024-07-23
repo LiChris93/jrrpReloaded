@@ -28,4 +28,10 @@ public class values {
     public static autoGC autoGC_thread;
     public static autoSave autoSave_thread;
     public static autoSummarizeYesterdayRank autoSum_thread;
+
+    public static boolean award_enabled;
+    public static boolean auto_award_when_join_enabled;
+    public static String award_command;
+    public static boolean award_available = false;
+
 }

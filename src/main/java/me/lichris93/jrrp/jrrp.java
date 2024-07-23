@@ -53,6 +53,8 @@ public final class jrrp extends JavaPlugin {
         }
         //Register game command
         regCommand();
+        //Register Event Listener
+        regEventListener();
         //register PAPI
         registerPAPI();
         //start GC
@@ -100,12 +102,25 @@ public final class jrrp extends JavaPlugin {
         }
     }
 
+    public void regEventListener() {
+        try {
+            getServer().getPluginManager().registerEvents(new autoAwardWhenJoin(), this);
+            info(reg_listener_success);
+        } catch (Exception e) {
+            warn(reg_listener_fail);
+            e.printStackTrace();
+            //Disable plugin
+            this.getPluginLoader().disablePlugin(this);
+        }
+    }
+
     public void loadConfigOnEnable() {
         try {
             config = plugin.getConfig();//读取config.yml
             langsYML = YamlConfiguration.loadConfiguration(langsFile);
             dataYML = YamlConfiguration.loadConfiguration(dataFile);
             loadConfig();
+            loadLang();
             info(read_config_success);
         } catch (Exception e) {
             warn(read_config_fail);
@@ -173,6 +188,12 @@ public final class jrrp extends JavaPlugin {
         autosave_enabled = config.getBoolean("autosave.enabled");
         autosave_interval = config.getInt("autosave.interval");
 
+        award_enabled = config.getBoolean("award.enabled");
+        auto_award_when_join_enabled = config.getBoolean("award.autoAwardWhenJoin");
+        award_command = config.getString("award.command");
+    }
+
+    public static void loadLang() {
         clear_all_success = langsYML.getString("lang.clear_all_success");
         clear_specific_player_success = langsYML.getString("lang.clear_specific_player_success");
         clear_specific_player_fail = langsYML.getString("lang.clear_specific_player_fail");
@@ -194,6 +215,8 @@ public final class jrrp extends JavaPlugin {
         on_disable = langsYML.getString("lang.on_disable");
         reg_command_success = langsYML.getString("lang.reg_command_success");
         reg_command_fail = langsYML.getString("lang.reg_command_fail");
+        reg_listener_success = langsYML.getString("lang.reg_listener_success");
+        reg_listener_fail = langsYML.getString("lang.reg_listener_fail");
         read_config_success = langsYML.getString("lang.read_config_success");
         read_config_fail = langsYML.getString("lang.read_config_fail");
         papi_success = langsYML.getString("lang.papi_success");
@@ -227,6 +250,7 @@ public final class jrrp extends JavaPlugin {
         help_jrrp = langsYML.getString("lang.help_jrrp");
         help_jrrp_help = langsYML.getString("lang.help_jrrp_help");
         help_jrrp_rank = langsYML.getString("lang.help_jrrp_rank");
+        help_jrrp_getaward = langsYML.getString("lang.help_jrrp_getaward");
         help_jrrp_clear = langsYML.getString("lang.help_jrrp_clear");
         help_jrrp_get = langsYML.getString("lang.help_jrrp_get");
         help_jrrp_reload = langsYML.getString("lang.help_jrrp_reload");
@@ -234,6 +258,12 @@ public final class jrrp extends JavaPlugin {
         help_jrrp_monitor = langsYML.getString("lang.help_jrrp_monitor");
         help_jrrp_start = langsYML.getString("lang.help_jrrp_start");
         help_jrrp_stop = langsYML.getString("lang.help_jrrp_stop");
+
+        award_disabled = langsYML.getString("lang.award_disabled");
+        award_successfully = langsYML.getString("lang.award_successfully");
+        already_awarded = langsYML.getString("lang.already_awarded");
+        not_yesterday_first = langsYML.getString("lang.not_yesterday_first");
+        award_refreshed = langsYML.getString("lang.award_refreshed");
     }
 
     public static void loadData() throws IOException {
@@ -255,6 +285,7 @@ public final class jrrp extends JavaPlugin {
             dataYML.set("data.date", real_date);
             dataYML.set("data.today", "{\"date\":\"\",\"player\":[],\"rate\":[]}");
             dataYML.set("data.yesterday", "{\"player\":[\"\",\"\",\"\"],\"rate\":[\"\",\"\",\"\"]}");
+            dataYML.set("data.award_available", true);
             dataYML.save(dataFile);
             return;
         }
@@ -272,6 +303,9 @@ public final class jrrp extends JavaPlugin {
         yesterday_first = new String[]{player_yesterday.get(0), rate_yesterday.get(0)};
         yesterday_second = new String[]{player_yesterday.get(1), rate_yesterday.get(1)};
         yesterday_third = new String[]{player_yesterday.get(2), rate_yesterday.get(2)};
+        //读取奖励是否已被领取的信息
+        if (award_enabled) award_available = dataYML.getBoolean("data.award_available");
+
         plugin.info(data_read_success);
     }
 
@@ -341,6 +375,8 @@ public final class jrrp extends JavaPlugin {
         yesterday_json.put("player", player_yesterday);
         yesterday_json.put("rate", rate_yesterday);
         dataYML.set("data.yesterday", yesterday_json.toString());
+        //保存奖励状态
+        dataYML.set("data.award_available", award_available);
         //写入文件
         dataYML.save(dataFile);
     }

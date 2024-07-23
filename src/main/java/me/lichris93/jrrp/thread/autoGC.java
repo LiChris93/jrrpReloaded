@@ -9,7 +9,7 @@ import java.util.Map;
 import static me.lichris93.jrrp.values.*;
 import static me.lichris93.jrrp.langs.*;
 
-public class autoGC extends Thread {//调用info等方法的话要用BukkitRunnable
+public class autoGC extends Thread {
 
     public void run() {
         plugin.getLogger().info(gc_start_success);
@@ -36,6 +36,12 @@ public class autoGC extends Thread {//调用info等方法的话要用BukkitRunna
                             gc_success.replace("{removed_count}", Integer.toString(dataRemoved)).
                                     replace("{date}", oldDate));
                 }
+                if (millis == 86400000 && award_enabled) {//这里限定条件，以避免开服第一天每5分钟重置一次的情况
+                    //重置奖励
+                    award_available = true;
+                    plugin.getServer().broadcastMessage(award_refreshed);
+                }
+                //线程被中断
                 if (interrupted()) {
                     throw new InterruptedException();
                 }
@@ -43,7 +49,7 @@ public class autoGC extends Thread {//调用info等方法的话要用BukkitRunna
             }
         } catch (Exception e) {
             e.printStackTrace();
-            plugin.getLogger().warning(thread_stopped_by_exception.replace("{name}","autoGC"));
+            plugin.getLogger().warning(thread_stopped_by_exception.replace("{name}", "autoGC"));
             autoGC_running = false;
         }
     }

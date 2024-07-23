@@ -22,6 +22,8 @@ public class langs {
     public static String on_disable = "jrrp disabled successfully!——By LiChris93";
     public static String reg_command_success = "Successfully registered command executor.";
     public static String reg_command_fail = "Failed to register command executor.";
+    public static String reg_listener_success = "Successfully registered Event Listener.";
+    public static String reg_listener_fail = "Failed to register Event Listener.";
     public static String read_config_success = "Successfully read config.";
     public static String read_config_fail = "Failed to read config.";
     public static String papi_success = "Successfully registered PAPI.";
@@ -55,6 +57,7 @@ public class langs {
     public static String help_jrrp = "§a/jrrp            generate/see your luck rate";
     public static String help_jrrp_help = "§a/jrrp help               show this help message";
     public static String help_jrrp_rank = "§a/jrrp rank                 show the rank list";
+    public static String help_jrrp_getaward = "§a/jrrp getaward         get the award (if you're yesterday's first)";
     public static String help_jrrp_clear = "§a/jrrp clear [name]                 clear data";
     public static String help_jrrp_get = "§a/jrrp get <name>     get somebody's luck rate";
     public static String help_jrrp_reload = "§a/jrrp reload                reload the config";
@@ -63,4 +66,9 @@ public class langs {
     public static String help_jrrp_start = "§a/jrrp start <thread>      Start a thread";
     public static String help_jrrp_stop = "§a/jrrp stop <thread>      Stop a thread";
 
+    public static String award_disabled = "§cAward has been disabled by operator!";
+    public static String award_successfully = "§aSuccessfully got your award!";
+    public static String already_awarded = "§cYou have already got your award!";
+    public static String not_yesterday_first = "§cYou're not the first of yesterday,you can't get the award.";
+    public static String award_refreshed = "§aThe award has been refreshed!";
 }

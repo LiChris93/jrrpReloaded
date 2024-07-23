@@ -3,3 +3,4 @@ data:
   date: ""
   today: '{"player":[],"rate":[]}'
   yesterday: '{"player":["","",""],"rate":["","",""]}'
+  award_available: true

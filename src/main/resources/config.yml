@@ -6,3 +6,11 @@ autosave:
   enabled: true
   #每次保存间隔(单位为毫秒)
   interval: 60000
+
+award:
+  #是否开启奖励功能(给前一天的第一名发物品奖励)
+  enabled: true
+  #是否开启进服自动奖励功能(若不开启，玩家只能通过输入指令来获得)
+  autoAwardWhenJoin: true
+  #给予奖励的指令(以OP身份执行) 请使用{name}代替玩家名
+  command: "give {name} diamond 1"

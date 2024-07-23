@@ -66,6 +66,10 @@ public class papi extends PlaceholderExpansion {
                 case "third_num_colored":
                     return colorNum(getValueByRank(3));
 
+                //Award Status
+                case "award_available_status":
+                    return (award_available && award_enabled) ? "§a√" : "§cX";
+
                 //Yesterday's Data
                 case "yesterday_first_player":
                     return yesterday_first[0];

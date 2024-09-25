@@ -41,7 +41,7 @@ public class autoSummarizeYesterdayRank extends Thread {
                     plugin.getServer().broadcastMessage("§a3:" + yesterday_third[0] + "-" + yesterday_third[1]);
                     millis = 86400000;
                 }
-                if (interrupted()) {
+                if (interrupted()) { //基本不可能在非sleep状态下被interrupt,但是以防万一
                     throw new InterruptedException();
                 }
                 sleep(millis);

@@ -65,24 +65,21 @@ public class gameCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender commandSender, Command command, String s, String @NotNull [] strings) {
         List<String> tabList = new ArrayList<>();
-        boolean isOP = commandSender.isOp();
         if (strings.length == 1) {// /jrrp 这里必须比onCommand多1,我不知道为什么
             tabList.add("help");
-            tabList.add("rank");
-            if (award_enabled) tabList.add("getaward");
-            if (isOP) {
-                tabList.add("clear");
-                tabList.add("get");
-                tabList.add("reload");
-                tabList.add("save");
-                tabList.add("monitor");
-                tabList.add("start");
-                tabList.add("stop");
-            }
+            if (commandSender.hasPermission("jrrp.essential")) tabList.add("rank");
+            if (award_enabled && commandSender.hasPermission("jrrp.essential")) tabList.add("getaward");
+            if (commandSender.hasPermission("jrrp.clear")) tabList.add("clear");
+            if (commandSender.hasPermission("jrrp.get")) tabList.add("get");
+            if (commandSender.hasPermission("jrrp.reload")) tabList.add("reload");
+            if (commandSender.hasPermission("jrrp.save")) tabList.add("save");
+            if (commandSender.hasPermission("jrrp.monitor")) tabList.add("monitor");
+            if (commandSender.hasPermission("jrrp.start")) tabList.add("start");
+            if (commandSender.hasPermission("jrrp.stop")) tabList.add("stop");
             return tabList;
         }
 
-        if (!isOP || strings.length != 2) return Collections.emptyList();
+        if (strings.length != 2) return Collections.emptyList();
         switch (strings[0].toLowerCase()) {
             case "clear":// /jrrp clear [name]
             case "get":// /jrrp get <name>
@@ -109,23 +106,23 @@ public class gameCommand implements TabExecutor {
     public void showHelp(@NotNull CommandSender commandSender) {
         commandSender.sendMessage("§a--------------[ jrrp ]--------------");
         commandSender.sendMessage(help_option);
-        commandSender.sendMessage(help_jrrp);
+        if (commandSender.hasPermission("jrrp.essential")) commandSender.sendMessage(help_jrrp);
         commandSender.sendMessage(help_jrrp_help);
-        commandSender.sendMessage(help_jrrp_rank);
-        if(award_enabled) commandSender.sendMessage(help_jrrp_getaward);
-        if (commandSender.isOp()) {
-            commandSender.sendMessage(help_jrrp_clear);
-            commandSender.sendMessage(help_jrrp_get);
-            commandSender.sendMessage(help_jrrp_reload);
-            commandSender.sendMessage(help_jrrp_save);
-            commandSender.sendMessage(help_jrrp_monitor);
-            commandSender.sendMessage(help_jrrp_start);
-            commandSender.sendMessage(help_jrrp_stop);
-        }
+        if (commandSender.hasPermission("jrrp.essential")) commandSender.sendMessage(help_jrrp_rank);
+        if (award_enabled && commandSender.hasPermission("jrrp.essential"))
+            commandSender.sendMessage(help_jrrp_getaward);
+        if (commandSender.hasPermission("jrrp.clear")) commandSender.sendMessage(help_jrrp_clear);
+        if (commandSender.hasPermission("jrrp.get")) commandSender.sendMessage(help_jrrp_get);
+        if (commandSender.hasPermission("jrrp.reload")) commandSender.sendMessage(help_jrrp_reload);
+        if (commandSender.hasPermission("jrrp.save")) commandSender.sendMessage(help_jrrp_save);
+        if (commandSender.hasPermission("jrrp.monitor")) commandSender.sendMessage(help_jrrp_monitor);
+        if (commandSender.hasPermission("jrrp.start")) commandSender.sendMessage(help_jrrp_start);
+        if (commandSender.hasPermission("jrrp.stop")) commandSender.sendMessage(help_jrrp_stop);
         commandSender.sendMessage("§a----------[ By LiChris93 ]------------");
     }
 
     public void valueGenerate(@NotNull CommandSender commandSender) {
+        if (unPass(0, "jrrp.essential", commandSender, new String[]{})) return;
         SimpleDateFormat f = new SimpleDateFormat("MM/dd");//格式化
         String date = f.format(new Date());//日期
         String name = commandSender.getName();//使用者名字
@@ -141,7 +138,7 @@ public class gameCommand implements TabExecutor {
     }
 
     public void get(@NotNull CommandSender commandSender, String @NotNull [] strings) {
-        if (unPass(2, true, commandSender, strings)) return;
+        if (unPass(2, "jrrp.get", commandSender, strings)) return;
 
         if (DataMap.get(strings[1]) != null) {//成功获取
             commandSender.sendMessage(
@@ -173,8 +170,7 @@ public class gameCommand implements TabExecutor {
     }
 
     public void reload(@NotNull CommandSender commandSender, String @NotNull [] strings) {
-        if (unPass(1, true, commandSender, strings)) return;
-
+        if (unPass(1, "jrrp.reload", commandSender, strings)) return;
         try {
             plugin.reloadConfig();
             config = plugin.getConfig();
@@ -191,7 +187,7 @@ public class gameCommand implements TabExecutor {
     }
 
     public void sendRank(@NotNull CommandSender commandSender, String @NotNull [] strings) {
-        if (unPass(1, false, commandSender, strings)) return;
+        if (unPass(1, "jrrp.essential", commandSender, strings)) return;
 
         autoRank.updateRank();
         int rank = 0;
@@ -207,7 +203,7 @@ public class gameCommand implements TabExecutor {
     }
 
     public void save(@NotNull CommandSender commandSender, String @NotNull [] strings) {
-        if (unPass(1, true, commandSender, strings)) return;
+        if (unPass(1, "jrrp.save", commandSender, strings)) return;
 
         try {
             plugin.saveData();
@@ -220,7 +216,7 @@ public class gameCommand implements TabExecutor {
     }
 
     public void monitor(@NotNull CommandSender commandSender, String @NotNull [] strings) {
-        if (unPass(1, true, commandSender, strings)) return;
+        if (unPass(1, "jrrp.monitor", commandSender, strings)) return;
 
         commandSender.sendMessage(monitor_title);
         commandSender.sendMessage("§aautoRank:" + autoRank_running);
@@ -230,7 +226,7 @@ public class gameCommand implements TabExecutor {
     }
 
     public void threadStart(@NotNull CommandSender commandSender, String @NotNull [] strings) {
-        if (unPass(2, true, commandSender, strings)) return;
+        if (unPass(2, "jrrp.start", commandSender, strings)) return;
         switch (strings[1]) {
             case "autoGC":
                 startAutoGC(commandSender);
@@ -251,7 +247,7 @@ public class gameCommand implements TabExecutor {
     }
 
     public void threadStop(@NotNull CommandSender commandSender, String @NotNull [] strings) {
-        if (unPass(2, true, commandSender, strings)) return;
+        if (unPass(2, "jrrp.stop", commandSender, strings)) return;
         switch (strings[1]) {
             case "autoGC":
                 stopAutoGC(commandSender);
@@ -272,7 +268,7 @@ public class gameCommand implements TabExecutor {
     }
 
     public void getAward(@NotNull CommandSender commandSender, String @NotNull [] strings) {
-        if (unPass(1, false, commandSender, strings)) return;
+        if (unPass(1, "jrrp.essential", commandSender, strings)) return;
         //没有启用
         if (!award_enabled) {
             commandSender.sendMessage(award_disabled);
@@ -296,11 +292,11 @@ public class gameCommand implements TabExecutor {
         return Integer.toString(new Random().nextInt(101));
     }
 
-    public boolean unPass(int argNum, boolean needOP, @NotNull CommandSender commandSender, String @NotNull [] strings) {
+    public boolean unPass(int argNum, String Permission, @NotNull CommandSender commandSender, String @NotNull [] strings) {
         //仅适用于参数个数只有一种情况的时候 不止一种情况的话要单独写方法
 
         //没权限 显示帮助 不予通过
-        if (needOP && !commandSender.isOp()) {
+        if (!commandSender.hasPermission(Permission)) {
             showHelp(commandSender);
             return true;
         }
@@ -314,7 +310,7 @@ public class gameCommand implements TabExecutor {
 
     public boolean unPass_clear(@NotNull CommandSender commandSender, String @NotNull [] strings) {
         //没权限 显示帮助 不予通过
-        if (!commandSender.isOp()) {
+        if (!commandSender.hasPermission("jrrp.clear")) {
             showHelp(commandSender);
             return true;
         }

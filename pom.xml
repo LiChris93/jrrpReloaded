@@ -6,7 +6,7 @@
 
   <groupId>me.lichris93</groupId>
   <artifactId>jrrp</artifactId>
-          <version>1.0.2-pre4</version>
+          <version>1.0.2</version>
   <packaging>jar</packaging>
 
   <name>jrrp</name>

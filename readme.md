@@ -26,8 +26,8 @@
 
 ## 最新版本
 
-- [x] Pre-release: 1.0.2-pre4
-- [x] Release: 1.0.1
+- [x] Pre-release: 无
+- [x] Release: 1.0.2
 
 ## 服务端支持
 
@@ -39,13 +39,23 @@
     - help - 获取命令帮助
     - rank - 排行榜
     - getaward - 领取奖励(仅当本功能开启时可用)
-    - clear [name] - 清空指定玩家数据/所有数据(仅OP可用)
-    - get \<name\> - 获取指定玩家的人品值(仅OP可用)
-    - reload - 重载config(仅OP可用)
-    - save - 保存数据(仅OP可用)
-    - monitor - 监测各线程运行状态(仅OP可用)
-    - start \<thread\> 启动线程(仅OP可用)
-    - stop \<thread\> 停止线程(仅OP可用)
+    - clear [name] - 清空指定玩家数据/所有数据
+    - get \<name\> - 获取指定玩家的人品值
+    - reload - 重载config
+    - save - 保存数据
+    - monitor - 监测各线程运行状态
+    - start \<thread\> 启动线程
+    - stop \<thread\> 停止线程
+
+## 权限列表
+- jrrp.essential - 使用/jrrp,/jrrp getaward,/jrrp rank (请务必把此项权限给所有玩家)
+- jrrp.clear - 使用/jrrp clear
+- jrrp.get - 使用/jrrp get
+- jrrp.reload - 使用/jrrp reload
+- jrrp.save - 使用/jrrp save
+- jrrp.monitor - 使用/jrrp monitor
+- jrrp.start - 使用/jrrp start
+- jrrp.stop - 使用/jrrp stop
 
 ## 变量列表(需安装PlaceholderAPI)
 
@@ -81,7 +91,7 @@
 - [x] 按照名次给玩家发放物品奖励(只给第一名发)
 -  - [x] 前置要求:记录昨天的数据
 - [x] 关闭插件时把数据保存到yml,加载插件时再次读取(有点难)
-- [ ] 把目前OP可用的指令的权限拆分为权限组
+- [x] 把目前OP可用的指令的权限拆分为权限组
 - [x] 把langs和config拆开
 - [x] 用指令控制线程的运行
 

@@ -31,6 +31,9 @@ public class gameCommand implements TabExecutor {
             case "get":
                 get(commandSender, strings);
                 break;
+            case "set":
+                set(commandSender, strings);
+                break;
             case "clear":
                 clear(commandSender, strings);
                 break;
@@ -71,6 +74,7 @@ public class gameCommand implements TabExecutor {
             if (award_enabled && commandSender.hasPermission("jrrp.essential")) tabList.add("getaward");
             if (commandSender.hasPermission("jrrp.clear")) tabList.add("clear");
             if (commandSender.hasPermission("jrrp.get")) tabList.add("get");
+            if (commandSender.hasPermission("jrrp.set")) tabList.add("set");
             if (commandSender.hasPermission("jrrp.reload")) tabList.add("reload");
             if (commandSender.hasPermission("jrrp.save")) tabList.add("save");
             if (commandSender.hasPermission("jrrp.monitor")) tabList.add("monitor");
@@ -83,6 +87,7 @@ public class gameCommand implements TabExecutor {
         switch (strings[0].toLowerCase()) {
             case "clear":// /jrrp clear [name]
             case "get":// /jrrp get <name>
+            case "set":// /jrrp set <name> <value>
                 for (Map.Entry<String, String[]> entry : DataMap.entrySet()) {
                     tabList.add(entry.getKey());
                 }
@@ -148,6 +153,29 @@ public class gameCommand implements TabExecutor {
             );
         } else {//未能获取
             commandSender.sendMessage(get_num_fail.replace("{player_name}", strings[1]));
+        }
+    }
+
+    public void set(@NotNull CommandSender commandSender, String @NotNull [] strings) {
+        if (unPass(3, "jrrp.set", commandSender, strings)) return;
+        String name = strings[1];//目标玩家名
+        String target_str = strings[2];//要设定的数字(str)
+        if(!target_str.matches("^[0-9]*$")){//如果不是纯数字(或者如果是负数)
+            commandSender.sendMessage("输入包含非数字字符!");
+            return;
+        }
+        int target_num = Integer.parseInt(strings[2]);//要设定的数字(int)
+        if (target_num < 0 || target_num > 100){ //数字非法
+            commandSender.sendMessage("数字必须在0-100之间!");
+            return;
+        }
+
+        if (DataMap.get(strings[1]) != null) {//该玩家的数据存在
+            String date = DataMap.get(name)[1];
+            DataMap.put(strings[1],new String[]{target_str,date});
+            commandSender.sendMessage("成功将"+name+"的人品值设置为"+target_str+"!");
+        } else {//该玩家的数据不存在
+            commandSender.sendMessage("该玩家不存在!");
         }
     }
 

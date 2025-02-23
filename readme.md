@@ -41,6 +41,7 @@
     - getaward - 领取奖励(仅当本功能开启时可用)
     - clear [name] - 清空指定玩家数据/所有数据
     - get \<name\> - 获取指定玩家的人品值
+    - set \<name\> \<value\> - 获取指定玩家的人品值
     - reload - 重载config
     - save - 保存数据
     - monitor - 监测各线程运行状态
@@ -51,6 +52,7 @@
 - jrrp.essential - 使用/jrrp,/jrrp getaward,/jrrp rank (请务必把此项权限给所有玩家)
 - jrrp.clear - 使用/jrrp clear
 - jrrp.get - 使用/jrrp get
+- jrrp.set - 使用/jrrp set
 - jrrp.reload - 使用/jrrp reload
 - jrrp.save - 使用/jrrp save
 - jrrp.monitor - 使用/jrrp monitor

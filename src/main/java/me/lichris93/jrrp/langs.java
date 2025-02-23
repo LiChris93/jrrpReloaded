@@ -7,7 +7,7 @@ public class langs {
     public static String get_num_success = "§a{player_name}'s luck rate is {num},got on {date}.";
     public static String get_num_fail = "§cUnable to get data of {player_name}.";
     public static String generate_success = "§aSuccessfully generated!Your luck rate is {num}.";
-    public static String generate_duplicate = "§cYou have already generated your luck rate today!The luck rate you generated was {num}.";
+    public static String generate_duplicate = "§cYou have already generated your luck rate today!Your luck rate is {num}.";
     public static String rank_title = "§a--------------  Rank List  --------------";
     public static String rank_format = "§a{rank}.{player_name}:{num}";
     public static String gc_success = "§a[jrrp-GC]Successfully removed {removed_count} expired data on {date}!";

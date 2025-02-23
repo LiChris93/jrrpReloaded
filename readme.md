@@ -41,7 +41,7 @@
     - getaward - 领取奖励(仅当本功能开启时可用)
     - clear [name] - 清空指定玩家数据/所有数据
     - get \<name\> - 获取指定玩家的人品值
-    - set \<name\> \<value\> - 获取指定玩家的人品值
+    - set \<name\> \<value\> - 更改指定玩家的人品值
     - reload - 重载config
     - save - 保存数据
     - monitor - 监测各线程运行状态
